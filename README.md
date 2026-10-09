@@ -33,22 +33,27 @@ python3 scripts/install.py install --dest "$PROJECT/.agents/skills"
 安装器只复制 `maintain-personal-context`，不改配置、不扫描资料、不安装依赖；已有同名目录会拒绝覆盖。不会自动选择或修改用户全局安装位置。
 当前 Codex 会检测技能变化；若未出现，在项目内重启客户端/新建会话，再显式调用 `$maintain-personal-context`。脚本只能验证目录与完整性，不能假报 UI 已加载。
 
-GitHub 发布后，也可在支持 skill-installer 的 Codex 中说：
+已发布仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。以下安装固定到已审核并完成干净安装与实际调用验证的代码版本 [3fd45cd568f0fefacfeee27daf78f892459d4502](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/3fd45cd568f0fefacfeee27daf78f892459d4502)；后续 README 文档提交不改变此安装目标。
+
+在支持 skill-installer 的 Codex 中，可复制：
 
 ```text
-$skill-installer 从已发布仓库中的 skills/maintain-personal-context 安装到我选定项目的 .agents/skills；不要覆盖已有同名 Skill。
+$skill-installer 请从 https://github.com/Badge5426/personal-assistant-knowledge-skill 的 commit 3fd45cd568f0fefacfeee27daf78f892459d4502 安装 skills/maintain-personal-context 到当前项目的 .agents/skills；先核对当前项目绝对路径，不要覆盖已有同名 Skill。
 ```
 
-发布前没有可用远端安装地址。请查看实际仓库地址与经核验的发布 commit，勿把候选地址当成已发布。
-使用系统 installer 的终端方式为：
+使用已有系统 installer 时，先在终端进入你选择的项目目录，再执行：
 
 ```sh
-python3 "/path/to/your/skill-installer/scripts/install-skill-from-github.py" \
-  --repo "Badge5426/personal-assistant-knowledge-skill" --ref "REVIEWED_COMMIT" \
-  --path "skills/maintain-personal-context" --dest "$PROJECT/.agents/skills"
+PROJECT="$PWD"
+INSTALLER="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/install-skill-from-github.py"
+python3 "$INSTALLER" \
+  --repo "Badge5426/personal-assistant-knowledge-skill" \
+  --ref "3fd45cd568f0fefacfeee27daf78f892459d4502" \
+  --path "skills/maintain-personal-context" --dest "$PROJECT/.agents/skills" \
+  --method download
 ```
 
-系统脚本不是本包的一部分；其路径、Python 要求和下载权限需在你的安装环境核实。推荐固定审核过的 commit。
+系统 installer 不是本包的一部分；以上路径使用 CODEX_HOME 或其默认目录。若你的客户端未带此脚本或位置不同，使用上面的 Codex 安装指令，或取得完整源码后按本地安装步骤操作。此包不安装依赖，也不改变下载或账号权限。
 
 ## 最小起步
 
