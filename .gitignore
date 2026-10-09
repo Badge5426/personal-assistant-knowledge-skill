@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.context/
+my-private-context/
+private-source/
+review-evidence/
+*.zip
