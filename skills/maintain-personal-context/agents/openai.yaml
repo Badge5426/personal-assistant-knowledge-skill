@@ -1,0 +1,4 @@
+interface:
+  display_name: "个人助手上下文"
+  short_description: "从指定日常记录维护个人档案与长期结论，保留来源、确认日期和纠错依据"
+  default_prompt: "使用 $maintain-personal-context 整理我提供的记录，列出有依据的长期更新候选。"
