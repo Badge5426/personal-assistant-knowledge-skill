@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "id": "illustration-learning",
+      "category": "experience-skills",
+      "layer": "profile",
+      "kind": "fact",
+      "status": "confirmed",
+      "text": "我正在学习插画基础；此前的项目经验表述不准确。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "虚构更正说明第1段"
+        }
+      ],
+      "event_date": null,
+      "record_date": "2026-09-03",
+      "valid_from": "2026-09-03",
+      "confirmed_on": "2026-09-03",
+      "confirmation": "虚构用户指令C：将旧经验描述更正为正在学习基础",
+      "supersedes": [
+        "illustration-practice"
+      ]
+    },
+    {
+      "id": "portfolio-review",
+      "category": "outcomes-reviews",
+      "layer": "longterm",
+      "kind": "inference",
+      "status": "confirmed",
+      "text": "我认可先验证小样再完善作品集的工作方法。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "虚构复盘第1段"
+        }
+      ],
+      "event_date": null,
+      "record_date": "2026-09-03",
+      "valid_from": null,
+      "confirmed_on": "2026-09-03",
+      "confirmation": "虚构用户指令D：只将此项复盘写入长期结论",
+      "supersedes": []
+    },
+    {
+      "id": "correction-note",
+      "category": "sources-corrections",
+      "layer": "daily",
+      "kind": "fact",
+      "status": "confirmed",
+      "text": "已按用户明确指令纠正旧插画经验描述。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "虚构更正说明第1段"
+        }
+      ],
+      "event_date": null,
+      "record_date": "2026-09-03",
+      "valid_from": null,
+      "confirmed_on": "2026-09-03",
+      "confirmation": "虚构用户指令C：保存本次更正依据",
+      "supersedes": []
+    }
+  ]
+}

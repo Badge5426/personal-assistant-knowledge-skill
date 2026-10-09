@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "id": "adult-role",
+      "category": "identity",
+      "layer": "profile",
+      "kind": "fact",
+      "status": "confirmed",
+      "text": "我是一位成年自由设计师。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "第1段"
+        }
+      ],
+      "event_date": null,
+      "record_date": "2026-09-01",
+      "valid_from": null,
+      "confirmed_on": "2026-09-01",
+      "confirmation": "虚构用户指令A：明确同意保存对应条目",
+      "supersedes": []
+    },
+    {
+      "id": "illustration-practice",
+      "category": "experience-skills",
+      "layer": "profile",
+      "kind": "fact",
+      "status": "confirmed",
+      "text": "我有插画项目经验。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "第2段"
+        }
+      ],
+      "event_date": null,
+      "record_date": "2026-09-01",
+      "valid_from": null,
+      "confirmed_on": "2026-09-01",
+      "confirmation": "虚构用户指令A：明确同意保存对应条目",
+      "supersedes": []
+    },
+    {
+      "id": "portfolio-goal",
+      "category": "goals",
+      "layer": "profile",
+      "kind": "fact",
+      "status": "confirmed",
+      "text": "我的当前目标是完成作品集。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "第3段"
+        }
+      ],
+      "event_date": null,
+      "record_date": "2026-09-01",
+      "valid_from": null,
+      "confirmed_on": "2026-09-01",
+      "confirmation": "虚构用户指令A：明确同意保存对应条目",
+      "supersedes": []
+    },
+    {
+      "id": "collaboration-unknown",
+      "category": "resources-collaboration",
+      "layer": "profile",
+      "kind": "fact",
+      "status": "unknown",
+      "text": "可协作资源：尚未提供。",
+      "sources": [],
+      "event_date": null,
+      "record_date": "2026-09-01",
+      "valid_from": null,
+      "confirmed_on": null,
+      "confirmation": null,
+      "supersedes": []
+    }
+  ]
+}

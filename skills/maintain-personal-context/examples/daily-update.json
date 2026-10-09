@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "id": "layout-trial",
+      "category": "daily-projects",
+      "layer": "daily",
+      "kind": "fact",
+      "status": "confirmed",
+      "text": "今天试了新的作品集排版。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "虚构日记第1段"
+        }
+      ],
+      "event_date": "2026-09-02",
+      "record_date": "2026-09-02",
+      "valid_from": null,
+      "confirmed_on": "2026-09-02",
+      "confirmation": "虚构用户指令B：保存本次日志",
+      "supersedes": []
+    },
+    {
+      "id": "tired-today",
+      "category": "daily-projects",
+      "layer": "daily",
+      "kind": "fact",
+      "status": "confirmed",
+      "text": "今天感到疲惫；仅是当次自述状态。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "虚构日记第2段"
+        }
+      ],
+      "event_date": "2026-09-02",
+      "record_date": "2026-09-02",
+      "valid_from": null,
+      "confirmed_on": "2026-09-02",
+      "confirmation": "虚构用户指令B：保存本次日志",
+      "supersedes": []
+    },
+    {
+      "id": "layout-review-candidate",
+      "category": "outcomes-reviews",
+      "layer": "daily",
+      "kind": "inference",
+      "status": "pending",
+      "text": "新的排版可能更适合这个作品集，尚需用户核对。",
+      "sources": [
+        {
+          "label": "虚构成人自述（测试素材）",
+          "locator": "虚构日记第1段"
+        }
+      ],
+      "event_date": null,
+      "record_date": "2026-09-02",
+      "valid_from": null,
+      "confirmed_on": null,
+      "confirmation": null,
+      "supersedes": []
+    }
+  ]
+}
