@@ -1,10 +1,10 @@
 # 个人助手知识库 Skill
 
-当前源码为 Native RC2 修正候选，等待独立审核，尚未推送。默认发现历史对话、已保存个人记忆、已有个人资料/项目文档；先读可访问已有资料，去重并核对较新明确纠正，填已知内容后再问缺项。新增桌面 Work 回执适配和匿名三来源测试，无新连接器或权限；已发布 Space RC2.1 的审核结果不自动覆盖本候选。
+Native RC2 已通过独立复审并发布。默认发现历史对话、已保存个人记忆、已有个人资料/项目文档；先读可访问已有资料，去重并核对较新明确纠正，填已知内容后再问缺项。新增桌面 Work 回执适配和匿名三来源测试，无新连接器或权限。本机一条获准真实线程的 4 页返回文字范围已读完；三类混合验证使用匿名夹具，全账户全集导入尚未验收，近期列表没有游标，不能称全量。
 
 显式首次调用后，在当前已连接账号建立私有个人助手 Space、七类目录和工作台，整理授权可读的对话与项目，保留来源、日期、未知和纠错关系，再用最多三项补充问题完善档案。日常记录逐渐变成长期助手上下文。
 
-需要当前客户端具备 Space 工具，并由用户显式调用。以下既有验收属于 Space RC2.1 基线：已在正常 Work 任务显式读取已安装 SKILL.md，使用 3 个完整匿名来源验证空白建库、资料整理、逐页读回、增量维护、受控续跑和重复调用不新增页面。安装本身不运行建库或增加权限。客户端自动发现、独立新模型、UI 渲染，以及真实账户历史发现到逐会话整理完整流程尚未验收；三个匿名来源不代表全部聊天。基线源码与上述验收证据已通过独立范围审计，本次 Native RC2 待审，限制见 [测试报告](docs/TEST_REPORT.md)。
+需要当前客户端具备 Space 工具，并由用户显式调用。以下既有验收属于 Space RC2.1 基线：已在正常 Work 任务显式读取已安装 SKILL.md，使用 3 个完整匿名来源验证空白建库、资料整理、逐页读回、增量维护、受控续跑和重复调用不新增页面。安装本身不运行建库或增加权限。客户端自动发现、独立新模型、UI 渲染，以及真实账户历史发现到逐会话整理完整流程尚未验收；三个匿名来源不代表全部聊天。基线源码与上述验收证据已通过独立范围审计，Native RC2 新增适配与冲突修复也已通过独立复审，限制见 [测试报告](docs/TEST_REPORT.md)。
 
 ## 实际入口
 
@@ -27,13 +27,13 @@ python3 scripts/install.py install --dest "$PROJECT/.agents/skills"
 
 只复制本 Skill，不扫描资料、不改配置、不安装依赖；已有同名目录拒绝覆盖。若客户端未发现变化，在选定项目内刷新/重启并显式调用。Python 3.9+，标准库即可；只用文稿流程不必运行脚本。
 
-公开仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。下面公开安装命令仍固定到已审已发布的 Space RC2.1 代码提交 [5cf445e2b5ca84e6b6aefe4b72dab2530b56abad](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/5cf445e2b5ca84e6b6aefe4b72dab2530b56abad)，不包含本次 Native RC2 补丁。该基线实际核对过 38 个公开文件、25 个 Skill 文件及两套 Python 各 74 测试。安装本候选使用上面的完整源码本地安装；审核通过并发布后才更新远端 pin。
+公开仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。以下安装固定到已通过独立复审、公开源码核对和干净安装的 Native RC2 代码提交 [de32ff8133c895c7cd10699bc824d37c87efc268](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/de32ff8133c895c7cd10699bc824d37c87efc268)。匿名公开克隆核对全部 44 文件，已有官方安装器从该固定 commit 下载的 27 个 Skill 文件与已审版本逐字节一致；Python 3.9/3.11 各 123 项测试通过。后续 README-only 文档提交不改变此安装目标。
 
 已带系统 skill-installer 的客户端，先进入选定项目目录，再按下面命令安装已核验的固定代码提交：
 
 ```sh
 PROJECT="$PWD"
-VERIFIED_COMMIT="5cf445e2b5ca84e6b6aefe4b72dab2530b56abad"
+VERIFIED_COMMIT="de32ff8133c895c7cd10699bc824d37c87efc268"
 INSTALLER="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/install-skill-from-github.py"
 python3 "$INSTALLER" --repo Badge5426/personal-assistant-knowledge-skill \
   --ref "$VERIFIED_COMMIT" --path skills/maintain-personal-context \
@@ -102,13 +102,13 @@ python3 -m unittest discover -s tests -v
 python3 scripts/check_package.py
 ```
 
-本地 46 项 + Space 账本 29 项 + native 历史 31 项 + 三来源 10 项 = 116 项离线测试。新增匿名 native 返回结构验证分页、host、消息身份与作者、日期、纠错保留、截断、未知及输出保留；三来源夹具验证同一事实合并出处、memory 不增加直接证据、较新明确纠正优先及已知项不重问。匿名测试与真实只读提炼分开，均不证明本候选已写入真实 Space；当前候选结果及基线连接态证据见 [测试报告](docs/TEST_REPORT.md)。审核按 [八项验收](docs/REVIEW_GUIDE.md)。测试不要求新账户权限或依赖安装。
+本地 46 项 + Space 账本 29 项 + native 历史 31 项 + 三来源 17 项 = 123 项离线测试。新增匿名 native 返回结构验证分页、host、消息身份与作者、日期、纠错保留、截断、未知及输出保留；三来源夹具验证同一事实合并出处、memory 不增加直接证据、较新明确纠正优先及已知项不重问。匿名测试与真实只读提炼分开，均不证明本轮已写入真实 Space；Native RC2 结果及基线连接态证据见 [测试报告](docs/TEST_REPORT.md)。审核按 [八项验收](docs/REVIEW_GUIDE.md)。测试不要求新账户权限或依赖安装。
 
 ## English
 
 Space-first personal-context skill; requires available Space tools and explicit invocation. Read the installed `.agents/skills/maintain-personal-context/SKILL.md` and its references first. Installation copies files only and grants no permissions. Explicit normal-Work loading with three complete fictional sources validated blank construction, organization, readback, incremental maintenance, controlled resume and repeat calls without new pages. Automatic discovery, a fresh independent model, UI rendering and the complete real-account history workflow remain unverified. Search hits and summaries are not all chats. Local Markdown is an explicit migration/export option. Python 3.9+, standard library only.
 
-Native RC2 is an unpublished review candidate. Discover authorized conversation history, existing memories and saved personal/project materials by default. Merge provenance, keep summaries graded, check newer explicit corrections, fill known content, then ask only missing or conflicting details. Optional local helpers call no API and do not write Space. The public pin above remains Space RC2.1 and excludes this patch.
+Native RC2 passed independent review and is published. Discover authorized conversation history, existing memories and saved personal/project materials by default. Merge provenance, keep summaries graded, check newer explicit corrections, fill known content, then ask only missing or conflicting details. Optional local helpers call no API and do not write Space. The public pin above targets the verified Native RC2 code commit. One authorized local thread was read through four returned text pages; mixed-source tests use fictional fixtures, and full-account import remains unverified.
 
 ## 许可
 
