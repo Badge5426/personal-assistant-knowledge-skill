@@ -1,0 +1,13 @@
+{
+  "disclaimer": "虚构成人项目的三来源语义标注；不是实际用户档案，不是自动自然语言抽取",
+  "required_keys": ["preferred_format", "experience_years", "current_goal"],
+  "claims": [
+    {"key": "preferred_format", "value": "先给三个选项", "source_kind": "conversation", "source_id": "fixture-chat-format", "author_role": "user", "evidence_tier": "direct", "recorded_at": "2026-09-01T08:00:00+00:00"},
+    {"key": "preferred_format", "value": "先给三个选项", "source_kind": "memory", "source_id": "fixture-memory-format", "author_role": "unknown", "evidence_tier": "summary", "recorded_at": "2026-09-02T08:00:00+00:00", "derived_from": ["fixture-chat-format"]},
+    {"key": "preferred_format", "value": "先给三个选项", "source_kind": "saved_material", "source_id": "fixture-profile-format-block", "author_role": "user", "evidence_tier": "saved", "recorded_at": "2026-09-03T08:00:00+00:00", "derived_from": ["fixture-chat-format"]},
+    {"key": "experience_years", "value": "八年", "source_kind": "conversation", "source_id": "fixture-chat-old-experience", "author_role": "user", "evidence_tier": "direct", "recorded_at": "2026-09-01T08:00:00+00:00"},
+    {"key": "experience_years", "value": "八年", "source_kind": "memory", "source_id": "fixture-memory-old-experience", "author_role": "unknown", "evidence_tier": "summary", "recorded_at": "2026-09-20T08:00:00+00:00", "derived_from": ["fixture-chat-old-experience"]},
+    {"key": "experience_years", "value": "八年", "source_kind": "saved_material", "source_id": "fixture-profile-old-experience-block", "author_role": "user", "evidence_tier": "saved", "recorded_at": "2026-09-02T08:00:00+00:00", "derived_from": ["fixture-chat-old-experience"]},
+    {"key": "experience_years", "value": "三年", "source_kind": "conversation", "source_id": "fixture-chat-explicit-correction", "author_role": "user", "evidence_tier": "direct", "recorded_at": "2026-09-10T08:00:00+00:00", "correction_of": "八年"}
+  ]
+}

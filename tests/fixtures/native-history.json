@@ -1,0 +1,74 @@
+{
+  "disclaimer": "完全虚构成人项目与消息；结构来自 native 工具 schema，不含真实历史内容、用户路径或账号标识",
+  "thread_id": "fixture-project-thread",
+  "host_id": "local",
+  "listing": {
+    "schemaVersion": 4,
+    "pinnedThreads": [
+      {"id": "fixture-project-thread", "kind": "codex", "hostId": "local", "title": "虚构木艺项目", "pinnedIndex": 1}
+    ],
+    "threads": [
+      {"id": "fixture-project-thread", "kind": "codex", "hostId": "local", "title": "虚构木艺项目"},
+      {"id": "fixture-project-thread", "kind": "codex", "hostId": "durable", "title": "同名虚构远端项目"},
+      {"id": "fixture-unknown-host", "kind": "codex", "hostId": null, "title": "未知主机项目"},
+      {"id": "fixture-chat", "kind": "chatgpt", "title": "虚构 ChatGPT 话题"}
+    ],
+    "unavailableHosts": [],
+    "unavailableSources": []
+  },
+  "archive": {"threads": [], "nextCursor": null},
+  "reads": [
+    {
+      "request_cursor": null,
+      "payload": {
+        "schemaVersion": 1,
+        "thread": {"id": "fixture-project-thread", "kind": "codex", "hostId": "local", "title": "虚构木艺项目"},
+        "page": {"order": "newest_first", "limit": 1, "nextCursor": "fixture-cursor-1", "hasMore": true},
+        "turns": [
+          {
+            "id": "fixture-turn-new", "status": "completed", "startedAt": 1790816400,
+            "items": [
+              {"type": "userMessage", "id": "fixture-user-new", "content": [{"type": "text", "text": "更正：我做木艺是三年，不是上次说的八年。这个项目先保留文字，只重做图案。"}]},
+              {"type": "agentMessage", "id": "fixture-agent-new", "text": "建议先确认图案尺寸，再考虑把木艺发展成长期事业。", "phase": "final_answer"},
+              {"type": "commandExecution", "id": "fixture-command", "command": "fictional-noop", "status": "completed"},
+              {"type": "reasoning", "id": "fixture-reasoning", "summary": []}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "request_cursor": "fixture-cursor-1",
+      "payload": {
+        "schemaVersion": 1,
+        "thread": {"id": "fixture-project-thread", "kind": "codex", "hostId": "local", "title": "虚构木艺项目"},
+        "page": {"order": "newest_first", "limit": 2, "nextCursor": "fixture-cursor-2", "hasMore": true},
+        "turns": [
+          {
+            "id": "fixture-turn-new", "status": "completed", "startedAt": 1790816400,
+            "items": [
+              {"type": "userMessage", "id": "fixture-user-new", "content": [{"type": "text", "text": "更正：我做木艺是三年，不是上次说的八年。这个项目先保留文字，只重做图案。"}]},
+              {"type": "agentMessage", "id": "fixture-agent-new", "text": "建议先确认图案尺寸，再考虑把木艺发展成长期事业。", "phase": "final_answer"}
+            ]
+          },
+          {
+            "id": "fixture-turn-old", "status": "completed", "startedAt": 1790730000,
+            "items": [
+              {"type": "userMessage", "id": "fixture-user-old", "content": [{"type": "text", "text": "我做木艺八年了，想试做一块项目招牌。"}]},
+              {"type": "agentMessage", "id": "fixture-agent-old", "text": "可以先做纸样。", "phase": "commentary"}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "request_cursor": "fixture-cursor-2",
+      "payload": {
+        "schemaVersion": 1,
+        "thread": {"id": "fixture-project-thread", "kind": "codex", "hostId": "local", "title": "虚构木艺项目"},
+        "page": {"order": "newest_first", "limit": 2, "nextCursor": null, "hasMore": false},
+        "turns": []
+      }
+    }
+  ]
+}
