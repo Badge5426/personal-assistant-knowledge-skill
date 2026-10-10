@@ -1,127 +1,109 @@
-# 个人助手上下文 Skill
+# 个人助手知识库 Skill
 
-把“我是谁”和用户选定的日常记录，逐渐变成有来源、能确认、能纠错的长期助手上下文。重点是助手理解个人的经历、资源、目标与项目，不是收集百科资料。
+显式首次调用后，在当前已连接账号建立私有个人助手 Space、七类目录和工作台，整理授权可读的对话与项目，保留来源、日期、未知和纠错关系，再用最多三项补充问题完善档案。日常记录逐渐变成长期助手上下文。
 
-公开包只含原创通用流程、空白模板、虚构成人样例和本地工具。真实资料、计划和备份放在此仓库之外的私人目录。安装不会获得全部聊天、电脑文件或 app 权限。
+需要当前客户端具备 Space 工具，并由用户显式调用。已在具备 Space 工具的正常 Work 任务中，通过显式读取已安装 SKILL.md，使用 3 个完整匿名来源验证空白建库、资料整理、逐页读回、增量维护、受控续跑和重复调用不新增页面。安装本身不运行建库或增加权限。客户端自动发现、独立新模型、UI 渲染，以及真实账户历史发现到逐会话整理完整流程尚未验收；三个匿名来源不代表全部聊天。源码与上述验收证据已通过独立范围审计，限制见 [测试报告](docs/TEST_REPORT.md)。
 
-## 包含什么
+## 实际入口
 
-`skills/maintain-personal-context/SKILL.md` 是实际安装入口。其 `references/` 包含维护、Space 输出与可选本地工具规则，`assets/templates/` 是空白模板，`examples/` 是虚构样例。
-`scripts/install.py` 仅安装/卸载此包；`tests/` 可离线重跑，无需安装第三方依赖。
+`skills/maintain-personal-context/SKILL.md` 是安装入口。默认 Space 为主来源；本地 Markdown 为明确选定的导出、迁移或独立维护方式。
 
-七类：我是谁 / 经历技能 / 资源协作 / 目标 / 日常项目 / 成果复盘 / 来源纠错。
-三个层：稳定档案 / 指定日常日志 / 精选长期结论。
-每条重要内容区分事实、推断、建议；来源、事件日期、生效日期、确认日期分别保留。未知不编造，明确纠错后旧说法被替代，不再当当前事实。
+七类是我是谁、经历技能、资源协作、目标、日常项目、成果复盘、来源纠错。根页加七类、工作台、稳定档案、日常日志、精选长期结论、建库与覆盖记录，共 13 个普通 Page。实际父子位置见 [建库流程](skills/maintain-personal-context/references/space-onboarding.md)。
 
-## 适用客户端
+用户事实、助手建议、第三方说法和推断分开；日期未知不编造。稳定档案引用当前源条目，日志保存临时状态，精选长期结论须确认。纠错保留旧证据和替代链，不把一次心情变成人格。
 
-独立 Skill 适用于支持本地 skills 的 ChatGPT 桌面端、Codex CLI、IDE 扩展；本包的目录安装验收针对 Codex 本地发现路径。桌面产品若界面不同，以其 Skills 入口和实际发现情况为准。
-不能声称本包可在 Web/手机“一键通用安装”。Web/手机的插件分发是另外一条产品路径，本版没有构建插件。
-目录格式可读取不等于模型已经行为验收；首次安装后还应在实际客户端调用并检查结果。
+## 安装
 
-官方：[Build skills](https://learn.chatgpt.com/docs/build-skills)。Codex 的本地发现位置包括项目 `.agents/skills` 与用户 `~/.agents/skills`。一些旧安装器默认 `~/.codex/skills`，本指南通过显式 `--dest` 使用当前项目路径。
+支持本地 skills 的 Codex CLI/IDE/桌面客户端；项目发现路径为 `.agents/skills`。目录安装不等于 Web/手机插件，本包没有构建“一键通用插件”。有些客户端不提供 Space 或完整历史接口，安装不会开通这些能力。
 
-## 本地安装（无需联网）
-
-先取得经审核的完整源码包、检查清单与代码。终端进入包根目录，将 PROJECT 改为你要使用 Skill 的项目绝对目录；PRIVATE 为仓库外的私人资料目录。勿把真实资料放进公开仓库。
+在完整源码包根目录执行，PROJECT 换成你选定项目的绝对路径：
 
 ```sh
 PROJECT="/absolute/path/to/your-project"
 python3 scripts/install.py install --dest "$PROJECT/.agents/skills"
 ```
 
-安装器只复制 `maintain-personal-context`，不改配置、不扫描资料、不安装依赖；已有同名目录会拒绝覆盖。不会自动选择或修改用户全局安装位置。
-当前 Codex 会检测技能变化；若未出现，在项目内重启客户端/新建会话，再显式调用 `$maintain-personal-context`。脚本只能验证目录与完整性，不能假报 UI 已加载。
+只复制本 Skill，不扫描资料、不改配置、不安装依赖；已有同名目录拒绝覆盖。若客户端未发现变化，在选定项目内刷新/重启并显式调用。Python 3.9+，标准库即可；只用文稿流程不必运行脚本。
 
-已发布仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。以下安装固定到已通过独立复审，并完成公开源码核对、干净安装及本地流程验证的 RC3.2 代码版本 [109a45ca40b8b810243ace7d05d5127bb54fb762](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/109a45ca40b8b810243ace7d05d5127bb54fb762)；后续 README 文档提交不改变此安装目标。
+公开仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。本次 Space-first 代码提交的固定安装入口将在远端源码与干净安装实际核验后填入；本段尚未给出已验证 commit 时，使用完整源码本地安装。
 
-在支持 skill-installer 的 Codex 中，可复制：
-
-```text
-$skill-installer 请从 https://github.com/Badge5426/personal-assistant-knowledge-skill 的 commit 109a45ca40b8b810243ace7d05d5127bb54fb762 安装 skills/maintain-personal-context 到当前项目的 .agents/skills；先核对当前项目绝对路径，不要覆盖已有同名 Skill。
-```
-
-使用已有系统 installer 时，先在终端进入你选择的项目目录，再执行：
+已带系统 skill-installer 的客户端，可按下面模板安装。VERIFIED_COMMIT 必须取实际核验的完整代码提交；此处仍为占位符时不能直接执行：
 
 ```sh
 PROJECT="$PWD"
+VERIFIED_COMMIT="<实际核验后的完整代码 commit>"
 INSTALLER="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/install-skill-from-github.py"
-python3 "$INSTALLER" \
-  --repo "Badge5426/personal-assistant-knowledge-skill" \
-  --ref "109a45ca40b8b810243ace7d05d5127bb54fb762" \
-  --path "skills/maintain-personal-context" --dest "$PROJECT/.agents/skills" \
-  --method download
+python3 "$INSTALLER" --repo Badge5426/personal-assistant-knowledge-skill \
+  --ref "$VERIFIED_COMMIT" --path skills/maintain-personal-context \
+  --dest "$PROJECT/.agents/skills" --method download
 ```
 
-系统 installer 不是本包的一部分；以上路径使用 CODEX_HOME 或其默认目录。若你的客户端未带此脚本或位置不同，使用上面的 Codex 安装指令，或取得完整源码后按本地安装步骤操作。此包不安装依赖，也不改变下载或账号权限。
+系统 installer 不属于本包。没有脚本时使用已有 $skill-installer 或完整源码本地安装，不创建新凭据或安装依赖。官方：[Build skills](https://learn.chatgpt.com/docs/build-skills)。
 
-## 最小起步
+## 首次调用
 
-“使用 $maintain-personal-context，根据这份自我介绍起草我的个人档案。未知留空，按七类整理，先给我确认，真实文件放到我指定的私人目录。”
-
-开始只要自我介绍、一个私人存放位置、当前希望解决的问题。不要求填满七类、每天打卡或预建大量页面。
-明确写入某条或更正某条已是对该项确认，不重复询问；其他长期候选仍待确认。一次情绪不升级为人格，助手建议不变成用户承诺。
-
-可直接维护模板 Markdown；若需要防重、防覆盖工具，用：
-
-```sh
-PRIVATE="/absolute/path/outside/public-repo/my-private-context"
-SCRIPT="$PROJECT/.agents/skills/maintain-personal-context/scripts/context_store.py"
-python3 "$SCRIPT" --root "$PRIVATE" init
+```text
+先读取项目内 .agents/skills/maintain-personal-context/SKILL.md 及引用规则，
+再按该 Skill 执行本次授权范围，在当前已连接账号建立我的私有个人助手 Space。
+整理本次授权可读的 Codex 对话和项目；ChatGPT 对话只在我也授权该范围时加入。
+先报告实际入口与读取范围，不读取未授权文件、不改变分享。
+把有来源的内容保存到七类页与工作台，完成后交付实际根页和覆盖缺口，再问最多三项必要补充。
+私人建库状态放在我已指定的仓库外私人目录；未知日期留未知。
 ```
 
-然后按 [本地工具格式](skills/maintain-personal-context/references/local-helper.md) 生成私有输入与计划，查看具体变化后按已授权项 apply。工具不自己判断什么事实应被确认，必须由实际用户指令支撑。
+已支持 Skill 名称发现的客户端也可使用 `$maintain-personal-context`，但名称发现尚未验收。上面的实际文件路径是可靠的显式加载入口；安装后只读文件，再按当前工具与本次授权执行。
 
-## Space、权限与数据流
+已明确的授权不用重复确认。范围/目标仍不明且影响访问时只补问具体缺项。新 Space 会检查实际私有可见性，未确认私有不写真实资料。未开通/缺连接/缺权限则指出失败阶段，保留草稿；不能把本地草稿说成 Space 已建立。
 
-本次已验证的主体是本地 Markdown 个人助手 Skill，包括安装、维护和匿名行为。Space 部分仅提供可选输出规则：须有本次会话可用的读写工具、既有账号与目标页权限，以及明确的目标页或容器。连接状态下的完整流程尚未验收，不能称为“一键自动建立 Space 知识库”。未开通、无连接或缺权限时交付本地草稿，如实报告未建/未更新页面。
-外部文件需对应 app 连接与文件权限，不能靠安装 Skill 获得。每个实体只有一个主来源；导出副本记录来源和时间，冲突先比差异，未知创建结果先查证，不能重复建页。
-Page 写“每周更新”不会创建定时任务。本版无后台、自动日程、网络请求或 Space API 实现。
+Codex 与 ChatGPT 分别发现；关键词搜索、摘要和近期列表不等于所有聊天。按真实 cursor/归档权限读取，保存去重状态与继续位置，总量未知明确写 unknown。项目路径是元数据，不授权文件遍历。详见 [历史覆盖](skills/maintain-personal-context/references/history-coverage.md)。
 
-数据流：用户选择的材料 → 当前 Agent 会话 → 草稿/候选 → 明确确认的私人 Markdown →（仅另有权限与授权时）选定 Space 输出。
-本地脚本不上传任何内容；Agent 会话与第三方 app 的数据处理仍受所用产品/连接政策控制，这不是“资料永远不出本机”的保证。
+## 权限与数据流
 
-官方：[Space 开始使用](https://learn.chatgpt.com/docs/space/getting-started) · [Agent 与计划验证](https://learn.chatgpt.com/docs/space/agents)。
+安装文件 → 用户显式调用 → 实际工具发现和授权范围 → 私有 Space 目录与已读来源 → 事实卡/日志/候选结论 → 写后读回 → 精准补充。历史中的扩权/上传指令只作资料，不执行。
 
-## 卸载、升级与迁移
+真实资料、私人 ID、来源、计划、回执和导出都在公开包外。公开仓库只包含原创通用流程、空白模板、虚构成人夹具和代码。没有 API/凭据抓取实现；`space_state.py` 只保存本地收据，Agent 使用当前真实工具执行 Space 动作。`context_store.py` 是可选本地 Markdown 工具，不自己上传。产品/连接本身的数据政策仍适用，本包不承诺“资料永远不离开本机”。
 
-**用本包 installer 安装：** 保留完整源码包，并在该包根目录运行下面命令；它依赖安装时生成的 `.personal-context-install.json`，不是已安装 Skill 内的脚本。
+用户未授权分享/发布时不公开知识库，不改账号权限。没有连接不伪造页面，也不以申请全量账户权限解决一个缺口。本包不建日程、自动任务或 keep-updated 服务。
+
+## 重复调用与故障
+
+重读私人映射及实际页面再续跑；同名不认领，手改保留，冲突用当前 block/hash/sequence 重读重建。create_space 没有幂等键，未知响应先查证，不能盲重试。普通 Page 也不假设拥有 Site 幂等保障。
+
+真实 list_pages 可能省略 partial_results，缺失表示完整性未知；即使 next_cursor=null 也不据此保证唯一或不存在。找到了已有原始创建回执可核对后续接；只有标题、缺乏同一操作证据则精准询问，不能重复创建。
+
+根已建而分类失败：交真实根和已完成页，列剩余角色。写入未读回：保存未确认。某源无权限：跳过该源并报告，不绕过拒绝。分享信息不完整：隐私未验证，不写真实资料。真实失败与模拟故障分别标注。恢复及可选私人账本见 [Space 保存与恢复](skills/maintain-personal-context/references/space-output.md)。
+
+## 本地迁移选项
+
+明确选择 Markdown 为主源或导出时使用 [本地规则](skills/maintain-personal-context/references/local-helper.md)。导出记录 Space 来源和时间，保留纠错关系，时间不改成确认日期。两处都改过先比较，不能自动双向覆盖。Space 缺工具时，用户可选择本地替代，但交付仍要写“未完成 Space”。
+
+## 卸载和升级
+
+本包 installer 安装后，在保留的完整源码根目录：
 
 ```sh
 python3 scripts/install.py uninstall --dest "$PROJECT/.agents/skills"
 ```
 
-命令校验安装未被修改后，将整个 Skill 移到 `$PROJECT/.agents/.personal-context-uninstalled` 的唯一备份目录，可恢复。手改文件或缺少标记时拒绝自动移动，原目录保留。
+它验证安装标记及未改动文件，将仅此 Skill 移到 `$PROJECT/.agents/.personal-context-uninstalled` 的唯一备份。修改过/无标记就拒绝自动移动，保留原目录。
 
-**用系统 skill-installer 安装：** 系统安装器只复制 `skills/maintain-personal-context`，不附带完整 repo 的 `scripts/install.py`，也不生成上述本包标记。因此不能用本包 uninstall；即使另有源码包，该命令也会因无标记拒绝。先核对安装目录与手改内容，再将仅此 Skill 的完整目录 `$PROJECT/.agents/skills/maintain-personal-context` 人工移到 skills 目录之外，例如 `$PROJECT/.agents/skill-backups` 下自行选择的唯一备份名。保留全部文件，不覆盖已有备份，不用静默删除代替卸载。
+系统 skill-installer 只复制 Skill，不带本包安装标记或根 scripts/install.py，不能用上述 uninstall。先核对手改内容，将仅 `$PROJECT/.agents/skills/maintain-personal-context` 完整移到 skills 外的唯一备份目录，如 `$PROJECT/.agents/skill-backups`；不静默删除、不覆盖备份。
 
-两种方式恢复时，先确认原 Skill 目录不存在，再将明确选定的备份完整移回；存在同名目录就先比差异，不能覆盖。升级也先按对应方式保留旧安装，再按原安装方式安装新审核版本；有手改时先保留副本并人工核对，不自动丢弃或合并。真实私人资料始终留在原来的仓库外目录。新代码能读旧版合法记录，但旧代码不能读新增历史字段，不要混用版本覆盖档案。
-若客户端仍缓存旧技能，重启/刷新。可恢复移动不等于安全擦除。
-迁移时复制完整私人目录（包括 `.context` 格式状态和备份），核对文件后重新指定主来源。只有 Markdown 时，将其作为普通文稿读取/整理并保留来源；当前工具没有 Markdown-only 导入恢复命令，不能对非空目录直接 init。不要把私人数据提交到此 repo。
+恢复前确认原目录不存在，再移回选定完整备份。升级先保留旧安装再装新审核版，有手改先保留副本并核对。卸载仅移除 Skill，不删除 Space、私人状态或导出；清理这些资料需独立明确操作。可恢复移动不等于擦除。当前本地 helper 可读取旧合法记录；旧代码不保证理解新历史字段，不混用覆盖。
 
-## 故障与可复现验证
-
-Python 需要 3.9+；不需 pip/npm 安装。只取得纯文本 Skill 的用户可以不运行脚本。
-已有目标/计划文件：拒绝覆盖，选新计划名或查看已有副本。
-计划后文件哈希变化：拒绝写入；重读差异，确认管理块仍合法后再做新计划。
-管理块内手改导致 Markdown 与 JSON 元数据不一致：每次计划都会拒绝，重读或重计划不能自动修好。先在私人位置保留完整手改副本，人工核对后恢复已知合法管理块，把需保留的手改移到块外备注或经明确确认的新输入，再做计划；若继续自由编辑，则改用普通 Markdown 维护，不让本工具覆盖它。
-未完成事务：检查私人备份，按工具说明 recover；恢复不会覆盖后续人工编辑。
-权限拒绝：保留可读草稿，指出具体目录/页面动作；不更改权限或索取宽泛授权。
-符号/硬链接内容文件不支持。多个文件写入不承诺绝对原子性；有备份、逐文件读回和中断恢复。
-未知/无来源/未确认：不进入已确认长期事实；补依据或留为候选。
-有生效日期的输入必须给出调用方明确的 `as_of` 日期，工具不猜今天或时区。未来生效的变化只能保存在 daily 的已确认未来计划中且不带 supersedes；在明确生效日另获更新授权后才能替代当前项，本包不会自动到期切换。
+## 可复现验证
 
 ```sh
 python3 -m unittest discover -s tests -v
 python3 scripts/check_package.py
 ```
 
-测试覆盖空白构建、首次虚构档案、增量/重复、纠错、未知状态、人工编辑、冲突、权限错误、事务恢复、安装/卸载与公开包规则。规则检查不是完整隐私审计或真实 Space 写页验收。详见 `docs/TEST_REPORT.md` 与 `docs/REVIEW_GUIDE.md`。
+本地 46 项 + Space 账本 28 项 = 74 项离线测试。模拟回执测试验证状态和边界，不等于连接态。真实隔离 Space 创建/逐页读回/重复调用/受控中断续建的证据及尚未验证项见 [测试报告](docs/TEST_REPORT.md)。审核按 [八项验收](docs/REVIEW_GUIDE.md)。测试不要求新账户权限或依赖安装。
 
 ## English
 
-A local personal-context skill: selected materials, confirmed profile, daily logs, and curated long-term conclusions with sources and correction history. Python 3.9+, standard library only. Use an explicit project `.agents/skills` destination and keep private output outside this repository. Installation grants no account permissions. The verified scope is local Markdown. Optional Space rules require available tools, existing permissions and an explicit destination; the connected workflow has not been fully validated. Standalone folders are not a web/mobile plugin. See the Chinese guide above for installation, reversible removal, failure handling and reproducible tests.
+Space-first personal-context skill; requires available Space tools and explicit invocation. Read the installed `.agents/skills/maintain-personal-context/SKILL.md` and its references first. Installation copies files only and grants no permissions. Explicit normal-Work loading with three complete fictional sources validated blank construction, organization, readback, incremental maintenance, controlled resume and repeat calls without new pages. Automatic discovery, a fresh independent model, UI rendering and the complete real-account history workflow remain unverified. Search hits and summaries are not all chats. Local Markdown is an explicit migration/export option. Python 3.9+, standard library only.
 
 ## 许可
 
-原创文件使用 MIT，见 LICENSE。未复制第三方实现或安装陌生仓库依赖；官方文档只作行为/兼容性依据。参考与范围见 [设计依据](docs/DESIGN.md)。
+原创文件使用 MIT，见 LICENSE。没有复制第三方实现或运行陌生仓库代码；官方文档仅为行为依据。详见 [设计依据](docs/DESIGN.md)。
