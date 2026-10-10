@@ -25,13 +25,13 @@ python3 scripts/install.py install --dest "$PROJECT/.agents/skills"
 
 只复制本 Skill，不扫描资料、不改配置、不安装依赖；已有同名目录拒绝覆盖。若客户端未发现变化，在选定项目内刷新/重启并显式调用。Python 3.9+，标准库即可；只用文稿流程不必运行脚本。
 
-公开仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。本次 Space-first 代码提交的固定安装入口将在远端源码与干净安装实际核验后填入；本段尚未给出已验证 commit 时，使用完整源码本地安装。
+公开仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。以下安装固定到已通过独立范围审计、公开源码核对和干净安装的 Space RC2.1 代码提交 [5cf445e2b5ca84e6b6aefe4b72dab2530b56abad](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/5cf445e2b5ca84e6b6aefe4b72dab2530b56abad)。实际核对 38 个公开文件及官方安装器下载的 25 个 Skill 文件字节；Python 3.9/3.11 各 74 项测试通过。后续 README 文档提交不改变此安装目标。
 
-已带系统 skill-installer 的客户端，可按下面模板安装。VERIFIED_COMMIT 必须取实际核验的完整代码提交；此处仍为占位符时不能直接执行：
+已带系统 skill-installer 的客户端，先进入选定项目目录，再按下面命令安装已核验的固定代码提交：
 
 ```sh
 PROJECT="$PWD"
-VERIFIED_COMMIT="<实际核验后的完整代码 commit>"
+VERIFIED_COMMIT="5cf445e2b5ca84e6b6aefe4b72dab2530b56abad"
 INSTALLER="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/install-skill-from-github.py"
 python3 "$INSTALLER" --repo Badge5426/personal-assistant-knowledge-skill \
   --ref "$VERIFIED_COMMIT" --path skills/maintain-personal-context \
