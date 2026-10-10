@@ -1,0 +1,182 @@
+{
+  "zero": {
+    "entry": {
+      "status": "unavailable",
+      "reason": "本夹具没有 Space 工具，未创建页面"
+    },
+    "claims": [],
+    "coverage_gaps": [
+      "空白虚构成人资料；账户总量未知；未访问真实账户"
+    ]
+  },
+  "sparse": {
+    "entry": {
+      "status": "pending",
+      "reason": "本夹具只准备草稿，根页尚未读回"
+    },
+    "claims": [
+      {
+        "key": "current_problem",
+        "value": "为一次小型作品展示确定首个可交付版本",
+        "source_id": "fictional-source-1",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      }
+    ],
+    "recommendations": [
+      {
+        "label": "先缩小首个版本的范围",
+        "basis_keys": [
+          "current_problem"
+        ],
+        "first_step": "写下本次只展示的一件作品及完成标准",
+        "confirmation_condition": "展示日期和可用时间仍未知，确定范围前需确认"
+      }
+    ],
+    "coverage_gaps": [
+      "仅一条虚构用户自述；称呼、经历、时间资源未知；账户总量未知"
+    ]
+  },
+  "rich": {
+    "entry": {
+      "status": "verified",
+      "url": "https://example.invalid/fictional-root"
+    },
+    "claims": [
+      {
+        "key": "name",
+        "value": "林远",
+        "source_id": "fictional-source-10",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "introduction",
+        "value": "成年展陈设计从业者，喜欢用小项目检验想法",
+        "source_id": "fictional-source-11",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "skills",
+        "value": "两年展台设计经历",
+        "source_id": "fictional-source-12",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "resources",
+        "value": "已有绘图工具，可向一名熟悉的同事请教",
+        "source_id": "fictional-source-13",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "current_problem",
+        "value": "为下月小型作品展示完成一版可演示样件",
+        "source_id": "fictional-source-14",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "representative_experience",
+        "value": "曾负责一件社区展台的图样与组装说明",
+        "source_id": "fictional-source-15",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "time_resources",
+        "value": "本周可用两个晚上，已有绘图工具",
+        "source_id": "fictional-source-16",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "skills",
+        "value": "五年展台设计经历",
+        "source_id": "fictional-source-30",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-09-01T09:00:00+00:00"
+      },
+      {
+        "key": "skills",
+        "value": "两年展台设计经历",
+        "source_id": "fictional-source-31",
+        "author_role": "user",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00",
+        "correction_of": "五年展台设计经历"
+      },
+      {
+        "key": "skills",
+        "value": "已完成八十件作品",
+        "source_id": "fictional-source-32",
+        "author_role": "assistant",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      },
+      {
+        "key": "name",
+        "value": "林远",
+        "source_id": "fictional-source-33",
+        "author_role": "unknown",
+        "source_kind": "memory",
+        "evidence_tier": "summary",
+        "recorded_at": "2026-10-01T09:00:00+00:00"
+      }
+    ],
+    "recommendations": [
+      {
+        "label": "先确定一个样件的验收标准",
+        "basis_keys": [
+          "current_problem",
+          "representative_experience"
+        ],
+        "first_step": "列出样件必须演示的一个功能和一张展示图",
+        "confirmation_condition": "如展示主办方另有要求，先核对要求再制作"
+      },
+      {
+        "label": "把第一个晚上用于最小图样",
+        "basis_keys": [
+          "time_resources",
+          "skills"
+        ],
+        "first_step": "用现有绘图工具画出一个样件的关键尺寸",
+        "confirmation_condition": "如关键尺寸仍未知，先测量或确认，不能直接当成成品尺寸"
+      },
+      {
+        "label": "安排一次具体问题核对",
+        "basis_keys": [
+          "resources",
+          "current_problem"
+        ],
+        "first_step": "整理一张图和一个想请教的问题，先确认同事是否方便",
+        "confirmation_condition": "向他人发送前仍需用户明确授权；提及同事不表示对方承诺协作"
+      }
+    ],
+    "coverage_gaps": [
+      "完全虚构成人项目；入口 URL 为 example.invalid；未访问或写入真实 Space；账户总量未知"
+    ]
+  }
+}
