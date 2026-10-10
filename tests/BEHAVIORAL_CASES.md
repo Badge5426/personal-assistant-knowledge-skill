@@ -1,6 +1,10 @@
 # 行为夹具
 
-原有本地 helper 的 46 项测试保留。test_space_state.py 28 项均为离线状态/故障回执模拟，明确非真实 Space。
+原有本地 helper 的 46 项测试保留。基线 test_space_state.py 28 项为离线状态/故障回执模拟；候选另增 memory/materials 覆盖缺口 1 项，共 29，明确非真实 Space。
+
+Native RC1 新增 test_native_history.py 31 项，fixtures/native-history.json 为虚构成人项目、实际 native JSON 结构。逐条行为核对：近期列表和 pinned 按 host+thread 去重；同 ID 跨主机不合并；正文按作者保留；空末页完成文字游标；摘要、截断或缺分页不称完整；附件与 compaction 限制单独保留；旧纠错证据仍在且不生成保存确认。此夹具及本地规范化不写 Space。真实只读来源提炼在公开包外独立交审核。
+
+test_mixed_sources.py 10 项和 fixtures/mixed-sources.json 核验三种默认来源的语义标注归并：同一事实一个值保留三出处、重复调用不增加、衍生记忆不当原话、较新明确纠正优先，较晚/未知冲突仍待核，已知不重问、仅缺项/冲突入问题。语义标注由 Agent 判读，辅助函数不自动 NLP 或写页；这些匿名测试不证明真实个人资料三源导入。
 
 匿名人工完整消息见 ../skills/maintain-personal-context/examples/space-first-fixture.json。验收要逐条人工判读：
 
@@ -16,3 +20,5 @@
 真实工具验收在独立虚构 Space；公开包无其 ID。目录创建/读回/第二次调用/受控中断/部分 patch 的证据私人交独立审稿。故障 mock 与真实工具结果分别记录。
 
 RC2 回归：full+非空游标拒绝且状态不变，partial+游标和full+null可接受；主条目已更新但项目摘要仍旧时变更保持pending；保存确认来源/date不得借消息日期。
+
+Native RC2：作者未知保存资料晚于/同日于纠正或日期未知时保持冲突；缺较早用户权威时仍不忽略；确知较早对应值允许明确纠正；较早其他值不覆盖；同值只保留原分级；独自未知作者资料只为未确认候选。

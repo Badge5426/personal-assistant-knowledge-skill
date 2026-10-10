@@ -52,6 +52,16 @@ def add_page(s, role):
 
 
 class SpaceStateTests(unittest.TestCase):
+    def test_memory_material_coverage_gaps_do_not_create_phantom_sources(self):
+        state = root_state()
+        for channel, limitation in (("memory", "entry_missing"), ("materials", "permission_denied"), ("materials", "not_found_in_authorized_scope")):
+            coverage = {"tool": "fictional-read-tool", "scope": "selected fictional source only",
+                "checked_at": "2026-10-10", "enumeration_complete": "unknown", "total": "unknown",
+                "next_cursor": None, "limitations": [limitation]}
+            m.record_coverage(state, channel, coverage)
+            self.assertEqual(state["coverage"][channel]["limitations"], [limitation])
+            self.assertEqual(m.summary(state)["discovered"], 0)
+
     def test_complete_thirteen_role_directory_and_privacy(self):
         s = root_state()
         for role in m.ROLES:
