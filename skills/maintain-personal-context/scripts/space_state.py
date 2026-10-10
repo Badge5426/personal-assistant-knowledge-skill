@@ -241,7 +241,7 @@ def record_source(state, source):
 
 
 def record_coverage(state, channel, coverage):
-    if channel not in ("codex", "chatgpt", "projects"):
+    if channel not in ("codex", "chatgpt", "projects", "memory", "materials"):
         raise StateError("unknown history channel")
     required = {"tool", "scope", "checked_at", "enumeration_complete", "total", "next_cursor", "limitations"}
     if set(coverage) != required or coverage["enumeration_complete"] not in (True, False, "unknown"):
