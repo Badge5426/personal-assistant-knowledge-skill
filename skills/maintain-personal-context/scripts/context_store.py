@@ -151,6 +151,8 @@ def validate(record, incoming=True):
               "confirmation", "supersedes"}
     if not incoming:
         fields.add("superseded_by")
+        if isinstance(record, dict) and "original_status" in record:
+            fields.add("original_status")
     if not isinstance(record, dict) or set(record) != fields:
         raise ContextError("record keys must match the documented schema")
     if not isinstance(record["id"], str) or not ID.fullmatch(record["id"]):
@@ -162,12 +164,17 @@ def validate(record, incoming=True):
     allowed = {"confirmed", "pending", "unknown"} if incoming else set(STATUS)
     if record["status"] not in allowed:
         raise ContextError("invalid status")
+    original_status = record.get("original_status")
+    if "original_status" in record and (record["status"] != "superseded"
+            or original_status not in {"confirmed", "pending", "unknown"}):
+        raise ContextError("original_status belongs only to replaced history")
+    evidence_status = original_status or record["status"]
     if not isinstance(record["text"], str) or not record["text"].strip() or len(record["text"]) > 4000:
         raise ContextError("text must contain 1-4000 characters")
     sources = record["sources"]
     if not isinstance(sources, list) or len(sources) > 20:
         raise ContextError("sources must be a list of at most 20 references")
-    if not sources and record["status"] != "unknown":
+    if not sources and evidence_status != "unknown":
         raise ContextError("non-unknown records need a source")
     for source in sources:
         if (not isinstance(source, dict) or set(source) != {"label", "locator"}
@@ -182,12 +189,12 @@ def validate(record, incoming=True):
             not isinstance(record["confirmation"], str) or not record["confirmation"].strip()
             or len(record["confirmation"]) > 2000):
         raise ContextError("confirmation must be a specific instruction reference or null")
-    if record["status"] == "confirmed":
+    if evidence_status == "confirmed":
         if not record["confirmed_on"] or not record["confirmation"]:
             raise ContextError("confirmed records require confirmation date and instruction reference")
-    elif record["status"] != "superseded" and (record["confirmed_on"] or record["confirmation"]):
+    elif evidence_status != "superseded" and (record["confirmed_on"] or record["confirmation"]):
         raise ContextError("pending/unknown records cannot carry a confirmation")
-    if record["layer"] in {"profile", "longterm"} and record["status"] == "pending":
+    if record["layer"] in {"profile", "longterm"} and evidence_status == "pending":
         raise ContextError("pending candidates belong in daily records, outside long-term context")
     if (not isinstance(record["supersedes"], list)
             or any(not isinstance(x, str) or not ID.fullmatch(x) for x in record["supersedes"])
@@ -245,6 +252,8 @@ def render(records):
                   + "；依据：" + html.escape(r["confirmation"] or "无")]
         lines += ["- 来源：" + html.escape(s["label"]) + " · " + html.escape(s["locator"])
                   for s in r["sources"]]
+        if "original_status" in r:
+            lines += ["- 替代前状态：" + STATUS[r["original_status"]]]
         if r["superseded_by"]:
             lines += ["- 当前使用替代条目：" + r["superseded_by"]]
         if r["supersedes"]:
@@ -315,9 +324,35 @@ def semantic(record):
     return key + ((record["record_date"],) if record["layer"] == "daily" else ())
 
 
+def historical_replay(old, new):
+    """An old confirmation stays historical; new evidence alone needs review."""
+    if old["status"] != "superseded":
+        return False
+    original_status = old.get("original_status")
+    if original_status is None:
+        # Legacy history omitted this field; only positive confirmation is unambiguous.
+        if not old["confirmed_on"] or not old["confirmation"]:
+            return False
+        original_status = "confirmed"
+    previous = dict(old, status=original_status)
+    # History may have merged sources. semantic handles record_date for daily only.
+    if (semantic(previous) != semantic(new)
+            or any(previous[field] != new[field] for field in ("confirmed_on", "confirmation"))):
+        return False
+    if any(source not in previous["sources"] for source in new["sources"]):
+        raise ContextError("historical statement has new sources; review " + old["id"]
+                           + " before treating it as current; new evidence is not a new confirmation")
+    return True
+
+
 def make_plan(root, bundle):
-    if not isinstance(bundle, dict) or set(bundle) != {"version", "records"} or bundle["version"] != 1:
-        raise ContextError("bundle must contain version=1 and records")
+    if (not isinstance(bundle, dict)
+            or set(bundle) not in ({"version", "records"}, {"version", "records", "as_of"})
+            or bundle["version"] != 1):
+        raise ContextError("bundle must contain version=1, records and optional as_of")
+    as_of = bundle.get("as_of")
+    if "as_of" in bundle:
+        day(as_of, "as_of", nullable=False)
     if not isinstance(bundle["records"], list) or len(bundle["records"]) > 100:
         raise ContextError("records must be a list of at most 100 items")
     files = inventory(root)
@@ -336,6 +371,12 @@ def make_plan(root, bundle):
     seen_input = set()
     for original in bundle["records"]:
         validate(original)
+        if original["valid_from"] is not None:
+            if as_of is None:
+                raise ContextError("dated changes need explicit caller as_of; do not infer today")
+            if original["valid_from"] > as_of and (original["supersedes"]
+                    or original["layer"] != "daily"):
+                raise ContextError("future-effective changes must be daily plans without supersedes")
         new = copy.deepcopy(original)
         new["superseded_by"] = None
         rid = new["id"]
@@ -348,7 +389,7 @@ def make_plan(root, bundle):
             comparison["sources"] = new["sources"]
             historical = existing["status"] == "superseded"
             if historical:
-                comparison["status"] = new["status"]
+                comparison["status"] = comparison.pop("original_status", new["status"])
                 comparison["superseded_by"] = None
             if comparison != new:
                 raise ContextError("existing id differs; use a new confirmed id with supersedes")
@@ -357,6 +398,10 @@ def make_plan(root, bundle):
                     existing["sources"].append(source)
             validate(existing, incoming=False)
             outcome.append({"id": rid, "status": "historical_duplicate" if historical else "duplicate"})
+            continue
+        past = next((x for x in records.values() if historical_replay(x, new)), None)
+        if past:
+            outcome.append({"id": rid, "status": "historical_duplicate", "into": past["id"]})
             continue
         same = next((x for x in records.values() if semantic(x) == semantic(new)), None)
         if same:
@@ -372,6 +417,7 @@ def make_plan(root, bundle):
                 raise ContextError("replacement target missing or already superseded")
             if old["category"] != new["category"] or old["kind"] != new["kind"]:
                 raise ContextError("replacement must retain category and fact/inference/advice type")
+            old["original_status"] = old["status"]
             old["status"], old["superseded_by"] = "superseded", rid
         rel = rel_for(new)
         safe_path(root, rel)
