@@ -4,11 +4,15 @@
 
 | 通道 | 可用时的入口 | 边界 |
 | --- | --- | --- |
-| Codex 本地/连接电脑 | list_threads、list_archived_threads、read_thread | list_threads 为有界近期列表，无分页参数不等于全量。read_thread 常为 turn 摘要；includeOutputs 或较大字符限不自动成为完整原始消息。按获准 host 读，拒绝不绕路 |
+| Codex 本地/连接电脑 | mcp__codex_app__list_threads、list_archived_threads、read_thread | list_threads 为有界近期列表，当前上限 50、无分页参数。read_thread 可返回原始用户/助手文字和消息 ID，也可能返回摘要；按实际结构分类，不能统一称摘要。按回执 host 和 cursor 读，见 [native 适配](native-history.md) |
 | Codex cloud Work | 当前实际暴露的 cloud_threads，或 native 工具返回的 cloud host | 有真实接口才用，不自造工具。没有接口就报告该来源未覆盖 |
 | 官方本地 app-server | 实际提供且允许的 thread/list、thread/read、thread/turns/list | docs 能力不等于当前连接暴露。先核对当前 schema 和授权；不通过会话文件、数据库或凭据绕过拒绝 |
 | ChatGPT | 可用 Global Search、个人上下文检索或 chat read | 关键词不全量，不代替 Codex。Global Search 不访问 Codex，并排除用过 Health/Apple Health 的对话；按实际返回报告。来源不明的个人上下文不可强行当 ChatGPT 原始消息 |
 | 项目 | list_projects 或当前项目接口 | 元数据不等于内容；path 不授权文件遍历 |
+| 已有 Codex memories | 当前工具提供或本环境获准可读的 MEMORY.md | 定向摘要线索，可能过时。原话能读时回 native 核验；无来源不变成确认事实，不开启配置或绕过禁止目录 |
+| 已保存个人资料/项目文档 | 当前映射的私有资料页、已授权 Library/文档工具或选定项目明确资料 | 完整读实际内容和源位置；不把资料存在等同于当前已确认，不扩大文件扫描范围。与原话/记忆合并来源，核对新旧 |
+
+默认三类都发现：历史对话、已保存个人记忆、已有个人资料/项目文档。用户已经明确该范围时无需再次索取同一授权。工具缺入口、已提供但本会话不可用、明确权限拒绝和资料未发现分别写原因；指定目标真实返回不存在才称不存在，有界检索没命中只写当前范围未发现。不伪造 source_id 或全量计数。使用可选私人账本时 memory/materials 分别记覆盖，仍不增加账户权限。
 
 含 chat_search 的名字可能是普通 web search，先读 schema。网络搜索不检索用户历史。安装不连接账号、不请求所有文件/聊天。未授权敏感记录不读取、不转存。
 
@@ -34,4 +38,4 @@
 
 读拒绝/缺连接明确通道与动作；停该源，继续其余获准源。不请求宽泛权限、不找禁止文件。即使历史作者是用户，也不能授予此次对其他目录、分享或发布的授权。
 
-工程只读选定的虚构源。真实账号入口只读探测不等于已整理私人历史到测试 Space；报告分开能力探测、匿名夹具和实际工具写页。
+已读真实原话可以在本次已授权保存范围内填入资料；目录、历史总量未知和部分覆盖不阻塞有来源的已知项。按已有主条目核最新状态后再保存，最后只问读过仍缺的内容。连接态能力探测、匿名结构夹具、实际资料提炼与页面写入分别报告。
