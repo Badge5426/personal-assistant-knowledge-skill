@@ -33,12 +33,12 @@ python3 scripts/install.py install --dest "$PROJECT/.agents/skills"
 安装器只复制 `maintain-personal-context`，不改配置、不扫描资料、不安装依赖；已有同名目录会拒绝覆盖。不会自动选择或修改用户全局安装位置。
 当前 Codex 会检测技能变化；若未出现，在项目内重启客户端/新建会话，再显式调用 `$maintain-personal-context`。脚本只能验证目录与完整性，不能假报 UI 已加载。
 
-已发布仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。下列远端入口仍为历史发布版本；本 RC3 修复候选尚未复审或发布，当前不推荐用旧版本处理本次修复的边界。复审通过并完成新版本核验后，将更新固定安装 commit。以下保留曾完成干净安装与实际调用验证的代码版本 [3fd45cd568f0fefacfeee27daf78f892459d4502](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/3fd45cd568f0fefacfeee27daf78f892459d4502)；正式新入口将在复审与新版本核验后更新，不能将下列历史命令当作 RC3 修复版安装。
+已发布仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。以下安装固定到已通过独立复审，并完成公开源码核对、干净安装及本地流程验证的 RC3.2 代码版本 [109a45ca40b8b810243ace7d05d5127bb54fb762](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/109a45ca40b8b810243ace7d05d5127bb54fb762)；后续 README 文档提交不改变此安装目标。
 
 在支持 skill-installer 的 Codex 中，可复制：
 
 ```text
-$skill-installer 请从 https://github.com/Badge5426/personal-assistant-knowledge-skill 的 commit 3fd45cd568f0fefacfeee27daf78f892459d4502 安装 skills/maintain-personal-context 到当前项目的 .agents/skills；先核对当前项目绝对路径，不要覆盖已有同名 Skill。
+$skill-installer 请从 https://github.com/Badge5426/personal-assistant-knowledge-skill 的 commit 109a45ca40b8b810243ace7d05d5127bb54fb762 安装 skills/maintain-personal-context 到当前项目的 .agents/skills；先核对当前项目绝对路径，不要覆盖已有同名 Skill。
 ```
 
 使用已有系统 installer 时，先在终端进入你选择的项目目录，再执行：
@@ -48,7 +48,7 @@ PROJECT="$PWD"
 INSTALLER="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/install-skill-from-github.py"
 python3 "$INSTALLER" \
   --repo "Badge5426/personal-assistant-knowledge-skill" \
-  --ref "3fd45cd568f0fefacfeee27daf78f892459d4502" \
+  --ref "109a45ca40b8b810243ace7d05d5127bb54fb762" \
   --path "skills/maintain-personal-context" --dest "$PROJECT/.agents/skills" \
   --method download
 ```
