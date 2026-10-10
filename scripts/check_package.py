@@ -28,6 +28,9 @@ def check():
         SKILL / "references/space-output.md", SKILL / "scripts/space_state.py",
         SKILL / "assets/templates/COVERAGE.md", SKILL / "assets/templates/SPACE_WORKBENCH.md",
         ROOT / "tests/test_space_state.py",
+        SKILL / "references/native-history.md", SKILL / "scripts/native_history.py",
+        ROOT / "tests/test_native_history.py", ROOT / "tests/fixtures/native-history.json",
+        ROOT / "tests/test_mixed_sources.py", ROOT / "tests/fixtures/mixed-sources.json",
     ]
     for p in required:
         if not p.is_file():
