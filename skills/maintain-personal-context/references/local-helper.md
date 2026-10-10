@@ -19,7 +19,7 @@ python3 "$SCRIPT" --root "$PRIVATE" apply --plan "$PRIVATE/plan-001.json"
 
 ## 输入格式（version 1）
 
-顶层：`{"version":1,"records":[...]}`。每个条目必须正好包含下列字段，详见 [虚构样例](../examples/first-profile.json)。
+顶层：`{"version":1,"records":[...]}`，可额外提供 `"as_of":"YYYY-MM-DD"`。任一条目有非空 `valid_from` 时必须提供 as_of，值来自明确用户/调用方上下文，不用系统时钟或 record_date 代替。每个输入条目必须正好包含下列字段，详见 [虚构样例](../examples/first-profile.json)。
 
 | 字段 | 取值 |
 | --- | --- |
@@ -37,13 +37,15 @@ python3 "$SCRIPT" --root "$PRIVATE" apply --plan "$PRIVATE/plan-001.json"
 | confirmation | 实际具体确认指令的定位引用或 null |
 | supersedes | 被明确替代的旧条目 ID 数组；无则 [] |
 
-pending 只进入 daily；confirmed 必须有确认日期和引用；unknown 无确认并且不作为事实使用。同一 ID 内容不同时拒绝改写，纠错用新 ID+supersedes，旧记录自动标 superseded。只能在同一类别与事实/推断/建议类型内替代；不能借纠错把建议变为事实。
+pending 只进入 daily；confirmed 必须有确认日期和引用；unknown 无确认并且不作为事实使用。同一 ID 内容不同时拒绝改写，纠错用新 ID+supersedes，旧记录自动标 superseded，并保存替代前的 original_status；它是工具输出的历史字段，不能作为新输入字段。旧未知可保留原空来源/无确认，但必须有完整有效替代关系，不能借此免除新 confirmed 的来源和确认要求。旧版本未存 original_status 的合法历史仍可读；新增此字段的历史不兼容旧程序，回退前须保留完整私人目录并核对，不能混用版本覆盖档案。只能在同一类别与事实/推断/建议类型内替代；不能借纠错把建议变为事实。
+
+未来的 valid_from 不能用于提前替代旧项，也不能进入 profile/longterm 当前档案；先明确写成未来计划，放入 daily 且 supersedes=[]。到生效日另获更新授权后，用新的 as_of 与新条目替代旧项。工具不自动激活计划，不根据日期字段声称已完成时态判断。既有历史不会按 as_of 重算；若旧版已提前替代，须按来源人工核对并明确纠正，不自动改写历史。旧计划若含非空 valid_from 却无 as_of，需补明确比较日期并重新生成，不能直接应用。
 
 ## 文件与保护
 
 `PERSON_PROFILE.md`：稳定档案；`daily/YYYY-MM-DD.md`：事件与候选；`LONG_TERM.md`：精选结论；`SOURCES.md`：来源/纠错使用说明。来源与替代关系也显示在具体条目中。
-管理块中的可读 Markdown 与 JSON 元数据必须一致。手改管理块时拒绝覆盖，管理块外备注原样保留。
-所有相关文件哈希构成计划前置条件，发生改动需重读/重做计划。重复内容合并来源，不新增副本；不同日期的重复事件保留。
+管理块中的可读 Markdown 与 JSON 元数据必须一致。块内手改造成不一致时，每次计划都会拒绝，重计划不会自动修好。先保留完整私人手改副本，人工核对并恢复已知合法管理块；需保留的改动可放块外备注或经确认的新输入，再做计划。选择普通 Markdown 维护时不要让此工具覆盖它。管理块外备注原样保留。
+所有相关文件哈希构成计划前置条件；仅当管理块仍合法时，计划后的改动可以重读/重做计划。重复内容合并来源，不新增副本；不同日期的重复事件保留。
 
 单次写入使用原子替换、读回核验及私有事务备份；多个文件的替换不是文件系统级原子事务。进程中断后 pending 事务会阻止下一次计划，需检查备份并执行：
 
