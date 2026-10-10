@@ -33,7 +33,7 @@ python3 scripts/install.py install --dest "$PROJECT/.agents/skills"
 安装器只复制 `maintain-personal-context`，不改配置、不扫描资料、不安装依赖；已有同名目录会拒绝覆盖。不会自动选择或修改用户全局安装位置。
 当前 Codex 会检测技能变化；若未出现，在项目内重启客户端/新建会话，再显式调用 `$maintain-personal-context`。脚本只能验证目录与完整性，不能假报 UI 已加载。
 
-已发布仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。以下安装固定到已审核并完成干净安装与实际调用验证的代码版本 [3fd45cd568f0fefacfeee27daf78f892459d4502](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/3fd45cd568f0fefacfeee27daf78f892459d4502)；后续 README 文档提交不改变此安装目标。
+已发布仓库：[Badge5426/personal-assistant-knowledge-skill](https://github.com/Badge5426/personal-assistant-knowledge-skill)。下列远端入口仍为历史发布版本；本 RC3 修复候选尚未复审或发布，当前不推荐用旧版本处理本次修复的边界。复审通过并完成新版本核验后，将更新固定安装 commit。以下保留曾完成干净安装与实际调用验证的代码版本 [3fd45cd568f0fefacfeee27daf78f892459d4502](https://github.com/Badge5426/personal-assistant-knowledge-skill/tree/3fd45cd568f0fefacfeee27daf78f892459d4502)；正式新入口将在复审与新版本核验后更新，不能将下列历史命令当作 RC3 修复版安装。
 
 在支持 skill-installer 的 Codex 中，可复制：
 
@@ -83,25 +83,33 @@ Page 写“每周更新”不会创建定时任务。本版无后台、自动日
 
 官方：[Space 开始使用](https://learn.chatgpt.com/docs/space/getting-started) · [Agent 与计划验证](https://learn.chatgpt.com/docs/space/agents)。
 
-## 卸载与迁移
+## 卸载、升级与迁移
+
+**用本包 installer 安装：** 保留完整源码包，并在该包根目录运行下面命令；它依赖安装时生成的 `.personal-context-install.json`，不是已安装 Skill 内的脚本。
 
 ```sh
 python3 scripts/install.py uninstall --dest "$PROJECT/.agents/skills"
 ```
 
-卸载将校验未修改的安装移到 skills 目录之外、上级目录的 `.personal-context-uninstalled` 备份，可恢复；真实私人资料保持原位。已手改的安装拒绝自动移动，应自行检查并移走明确的 Skill 文件夹。
-若客户端仍缓存旧技能，重启/刷新。可恢复卸载不等于安全擦除。
+命令校验安装未被修改后，将整个 Skill 移到 `$PROJECT/.agents/.personal-context-uninstalled` 的唯一备份目录，可恢复。手改文件或缺少标记时拒绝自动移动，原目录保留。
+
+**用系统 skill-installer 安装：** 系统安装器只复制 `skills/maintain-personal-context`，不附带完整 repo 的 `scripts/install.py`，也不生成上述本包标记。因此不能用本包 uninstall；即使另有源码包，该命令也会因无标记拒绝。先核对安装目录与手改内容，再将仅此 Skill 的完整目录 `$PROJECT/.agents/skills/maintain-personal-context` 人工移到 skills 目录之外，例如 `$PROJECT/.agents/skill-backups` 下自行选择的唯一备份名。保留全部文件，不覆盖已有备份，不用静默删除代替卸载。
+
+两种方式恢复时，先确认原 Skill 目录不存在，再将明确选定的备份完整移回；存在同名目录就先比差异，不能覆盖。升级也先按对应方式保留旧安装，再按原安装方式安装新审核版本；有手改时先保留副本并人工核对，不自动丢弃或合并。真实私人资料始终留在原来的仓库外目录。新代码能读旧版合法记录，但旧代码不能读新增历史字段，不要混用版本覆盖档案。
+若客户端仍缓存旧技能，重启/刷新。可恢复移动不等于安全擦除。
 迁移时复制完整私人目录（包括 `.context` 格式状态和备份），核对文件后重新指定主来源。只有 Markdown 时，将其作为普通文稿读取/整理并保留来源；当前工具没有 Markdown-only 导入恢复命令，不能对非空目录直接 init。不要把私人数据提交到此 repo。
 
 ## 故障与可复现验证
 
 Python 需要 3.9+；不需 pip/npm 安装。只取得纯文本 Skill 的用户可以不运行脚本。
 已有目标/计划文件：拒绝覆盖，选新计划名或查看已有副本。
-文件哈希变化、管理块手改：拒绝写入，保留原文；重读差异并做新计划。
+计划后文件哈希变化：拒绝写入；重读差异，确认管理块仍合法后再做新计划。
+管理块内手改导致 Markdown 与 JSON 元数据不一致：每次计划都会拒绝，重读或重计划不能自动修好。先在私人位置保留完整手改副本，人工核对后恢复已知合法管理块，把需保留的手改移到块外备注或经明确确认的新输入，再做计划；若继续自由编辑，则改用普通 Markdown 维护，不让本工具覆盖它。
 未完成事务：检查私人备份，按工具说明 recover；恢复不会覆盖后续人工编辑。
 权限拒绝：保留可读草稿，指出具体目录/页面动作；不更改权限或索取宽泛授权。
 符号/硬链接内容文件不支持。多个文件写入不承诺绝对原子性；有备份、逐文件读回和中断恢复。
 未知/无来源/未确认：不进入已确认长期事实；补依据或留为候选。
+有生效日期的输入必须给出调用方明确的 `as_of` 日期，工具不猜今天或时区。未来生效的变化只能保存在 daily 的已确认未来计划中且不带 supersedes；在明确生效日另获更新授权后才能替代当前项，本包不会自动到期切换。
 
 ```sh
 python3 -m unittest discover -s tests -v
