@@ -24,6 +24,10 @@ def check():
         ROOT / "docs/REVIEW_GUIDE.md", SKILL / "SKILL.md",
         SKILL / "agents/openai.yaml", SKILL / "assets/templates/PERSON_PROFILE.md",
         SKILL / "assets/templates/DAILY_LOG.md", SKILL / "assets/templates/LONG_TERM.md",
+        SKILL / "references/space-onboarding.md", SKILL / "references/history-coverage.md",
+        SKILL / "references/space-output.md", SKILL / "scripts/space_state.py",
+        SKILL / "assets/templates/COVERAGE.md", SKILL / "assets/templates/SPACE_WORKBENCH.md",
+        ROOT / "tests/test_space_state.py",
     ]
     for p in required:
         if not p.is_file():

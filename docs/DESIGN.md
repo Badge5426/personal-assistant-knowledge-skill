@@ -1,14 +1,15 @@
-# 设计与来源依据
+# 设计依据和范围
 
-这是个人助手上下文维护方法，不是一般资料库。七类组织与三层存放来自任务提供的匿名方案及范围要求；公开实现为本项目原创，不包含真实个人档案或会话。
+Space-first：显式调用在授权范围下建立真实 Space、七类目录和工作台；安装只复制文件。用户稳定档案、事件日志、精选结论分层，证据和纠错关系保留。每实体一个主来源，Markdown 可选迁移。
 
-已有 Skill Creator / Skill Installer 提供文件结构、渐进读取、安装不覆盖原则。本包不复制其脚本；本地助手与安装器均自行实现，只用 Python 标准库。
-本轮未引入第三方实现、依赖、插件或远端服务。未执行陌生仓库代码。LifeOS 的身份/目标分层仅是可选参考，未复制内容；其 MIT 不被当作访问控制，publish:false 也不赋予保密能力。
+工具由执行环境提供，本包没有 Space API 实现。标准库助手只是私人回执账本，不借文档声称接口已暴露。Codex/ChatGPT/项目分开，摘要和搜索不全量，不读取禁止目录或绕过拒绝。
 
-兼容性核查日期：2026-10-09。
-- [Build skills](https://learn.chatgpt.com/docs/build-skills)：独立 Skill 客户端、本地 .agents/skills 与插件分发区别。
-- [Space getting started](https://learn.chatgpt.com/docs/space/getting-started)：账号访问与页面权限。
-- [Space agents](https://learn.chatgpt.com/docs/space/agents)：定时工作必须独立创建并验证。
-- [Long-running work](https://learn.chatgpt.com/docs/long-running-work)：/goal 是产品模式入口；一个目标提示词不能证明已启用 Goal。
+官方依据：
 
-本包没有 Goal 启用代码、真实 Space 写入代码、永久记忆服务、Web/手机插件或自动调度器。模型、客户端和 app 工具的运行能力仍需目标环境验证。
+- [Build skills](https://learn.chatgpt.com/docs/build-skills)：实际 Skill 文件和客户端发现。
+- [Space Pages](https://learn.chatgpt.com/docs/space/pages)：块编辑、实际 child Pages、来源引用。
+- [继承访问](https://learn.chatgpt.com/docs/space/collaboration#understand-inherited-access)：Space/父页共享可继承，单页位置不证明私有。
+- [Codex app-server](https://developers.openai.com/codex/app-server#threads)：官方 thread/list/read/turns 等能力，当前连接没有该接口时不自造。
+- 当前工具 schema：create_space 无幂等键；普通 Page 不假定 Site 幂等行为；list_pages 缺 partial_results 表示未知；修改使用实际块/hash/可用 sequence。
+
+仅阅读官方文档，没有复制第三方源码或执行陌生依赖。所有新流程、脚本和匿名夹具为原创 MIT。真实工具测试在独立虚构 Space，私人回执和账号身份留在公开包之外。
