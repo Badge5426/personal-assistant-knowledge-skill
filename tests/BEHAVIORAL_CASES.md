@@ -1,6 +1,6 @@
 # 行为夹具
 
-原有本地 helper 的 46 项测试保留。新的 test_space_state.py 27 项均为离线状态/故障回执模拟，明确非真实 Space。
+原有本地 helper 的 46 项测试保留。test_space_state.py 28 项均为离线状态/故障回执模拟，明确非真实 Space。
 
 匿名人工完整消息见 ../skills/maintain-personal-context/examples/space-first-fixture.json。验收要逐条人工判读：
 
