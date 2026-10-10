@@ -31,6 +31,8 @@ def check():
         SKILL / "references/native-history.md", SKILL / "scripts/native_history.py",
         ROOT / "tests/test_native_history.py", ROOT / "tests/fixtures/native-history.json",
         ROOT / "tests/test_mixed_sources.py", ROOT / "tests/fixtures/mixed-sources.json",
+        SKILL / "references/first-run-result.md", SKILL / "scripts/first_run.py",
+        ROOT / "tests/test_first_run.py", ROOT / "tests/fixtures/first-run.json",
     ]
     for p in required:
         if not p.is_file():
