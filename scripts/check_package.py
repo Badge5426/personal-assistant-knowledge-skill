@@ -33,6 +33,9 @@ def check():
         ROOT / "tests/test_mixed_sources.py", ROOT / "tests/fixtures/mixed-sources.json",
         SKILL / "references/first-run-result.md", SKILL / "scripts/first_run.py",
         ROOT / "tests/test_first_run.py", ROOT / "tests/fixtures/first-run.json",
+        SKILL / "references/content-coverage.md", SKILL / "scripts/source_checks.py",
+        SKILL / "scripts/content_review.py", ROOT / "tests/test_read_receipts.py",
+        ROOT / "tests/test_content_review.py",
     ]
     for p in required:
         if not p.is_file():
