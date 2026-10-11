@@ -5,4 +5,5 @@ __pycache__/
 my-private-context/
 private-source/
 review-evidence/
+private/
 *.zip
