@@ -7,6 +7,32 @@
     "claims": [],
     "coverage_gaps": [
       "空白虚构成人资料；账户总量未知；未访问真实账户"
+    ],
+    "source_review": [
+      {
+        "role": "personal_profile",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional zero fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有personal_profile材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "workbench",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional zero fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有workbench材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "materials_index",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional zero fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有materials_index材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "related_memory",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional zero fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有related_memory材料；其余用户原话按夹具读取"
+      }
     ]
   },
   "sparse": {
@@ -37,6 +63,32 @@
     ],
     "coverage_gaps": [
       "仅一条虚构用户自述；称呼、经历、时间资源未知；账户总量未知"
+    ],
+    "source_review": [
+      {
+        "role": "personal_profile",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional sparse fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有personal_profile材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "workbench",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional sparse fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有workbench材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "materials_index",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional sparse fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有materials_index材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "related_memory",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional sparse fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有related_memory材料；其余用户原话按夹具读取"
+      }
     ]
   },
   "rich": {
@@ -177,6 +229,189 @@
     ],
     "coverage_gaps": [
       "完全虚构成人项目；入口 URL 为 example.invalid；未访问或写入真实 Space；账户总量未知"
+    ],
+    "source_review": [
+      {
+        "role": "personal_profile",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional rich fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有personal_profile材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "workbench",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional rich fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有workbench材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "materials_index",
+        "status": "not_found_in_checked_scope",
+        "scope": "fictional rich fixture only; no real account",
+        "reason": "该明确选定的虚构输入未提供已有materials_index材料；其余用户原话按夹具读取"
+      },
+      {
+        "role": "related_memory",
+        "status": "read",
+        "scope": "fictional rich fixture only",
+        "source_ids": [
+          "fictional-source-33"
+        ]
+      }
+    ]
+  },
+  "master_profile": {
+    "entry": {
+      "status": "verified",
+      "url": "https://example.invalid/fictional-test-root"
+    },
+    "raw_materials": {
+      "profile": {
+        "source_id": "fictional-master-profile",
+        "author_role": "user",
+        "text": "成年使用者周岚，在青原市。已做过家具修复、图纸设计和实物制作；当前优先做家具修复视频。精确职业头衔与年限未记录。已完成两件木柜修复并展示作品，另有五个设计预览，预览不等于做成实物。"
+      },
+      "workbench": {
+        "source_id": "fictional-master-workbench",
+        "author_role": "user",
+        "text": "用户已选家具修复视频为主线；为一件已有木柜作品准备第一段演示。器材开箱和工具评测只是候选，不同时启动。固定工时与试验预算未知。"
+      },
+      "index": {
+        "source_id": "fictional-master-index",
+        "author_role": "user",
+        "text": "木柜项目已完成并展示，不重开制作。桌架项目图纸已交，未试装。旧打印机A已售，打印机B维修后未复验。 已有绘图工具、剪辑软件、照片和公开作品渠道。"
+      },
+      "memory": {
+        "source_id": "fictional-related-memory",
+        "author_role": "unknown",
+        "text": "历史摘要曾说打印机A在用，需回当前索引核对，摘要不是新的直接自述。"
+      },
+      "engineering_thread": {
+        "source_id": "fictional-engineering-thread",
+        "author_role": "assistant",
+        "text": "某插件目录已安装，程序测试通过；这只是工程回执，不描述使用者的经历、设备、主线或作品。"
+      }
+    },
+    "source_review": [
+      {
+        "role": "personal_profile",
+        "status": "read",
+        "scope": "the selected fictional profile only",
+        "source_ids": [
+          "fictional-master-profile"
+        ]
+      },
+      {
+        "role": "workbench",
+        "status": "read",
+        "scope": "the selected fictional workbench only",
+        "source_ids": [
+          "fictional-master-workbench"
+        ]
+      },
+      {
+        "role": "materials_index",
+        "status": "read",
+        "scope": "the selected fictional index only",
+        "source_ids": [
+          "fictional-master-index"
+        ]
+      },
+      {
+        "role": "related_memory",
+        "status": "read",
+        "scope": "the selected fictional memory only",
+        "source_ids": [
+          "fictional-related-memory"
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "key": "name",
+        "value": "周岚",
+        "source_id": "fictional-master-profile#name",
+        "author_role": "user",
+        "source_kind": "saved_material",
+        "evidence_tier": "saved",
+        "recorded_at": "2026-03-10T09:00:00+00:00"
+      },
+      {
+        "key": "introduction",
+        "value": "在青原市，有家具修复与实物制作实践，当前优先家具修复视频",
+        "source_id": "fictional-master-profile#introduction",
+        "author_role": "user",
+        "source_kind": "saved_material",
+        "evidence_tier": "saved",
+        "recorded_at": "2026-03-10T09:00:00+00:00"
+      },
+      {
+        "key": "skills",
+        "value": "完成两件木柜修复、图纸和实物制作，有作品展示记录",
+        "source_id": "fictional-master-profile#skills",
+        "author_role": "user",
+        "source_kind": "saved_material",
+        "evidence_tier": "saved",
+        "recorded_at": "2026-03-10T09:00:00+00:00"
+      },
+      {
+        "key": "representative_experience",
+        "value": "亲自完成两件木柜修复并展示作品",
+        "source_id": "fictional-master-profile#representative_experience",
+        "author_role": "user",
+        "source_kind": "saved_material",
+        "evidence_tier": "saved",
+        "recorded_at": "2026-03-10T09:00:00+00:00"
+      },
+      {
+        "key": "resources",
+        "value": "已有绘图工具、剪辑软件、照片和公开作品渠道；打印机A已售，B维修待验",
+        "source_id": "fictional-master-index#resources",
+        "author_role": "user",
+        "source_kind": "saved_material",
+        "evidence_tier": "saved",
+        "recorded_at": "2026-03-10T09:00:00+00:00"
+      },
+      {
+        "key": "current_problem",
+        "value": "为一件已有木柜作品准备第一段演示",
+        "source_id": "fictional-master-workbench#current_problem",
+        "author_role": "user",
+        "source_kind": "saved_material",
+        "evidence_tier": "saved",
+        "recorded_at": "2026-03-10T09:00:00+00:00"
+      },
+      {
+        "key": "engineering_status",
+        "value": "某插件目录已安装，程序测试通过；这只是工程回执，不描述使用者的经历、设备、主线或作品。",
+        "source_id": "fictional-engineering-thread",
+        "author_role": "assistant",
+        "source_kind": "conversation",
+        "evidence_tier": "direct",
+        "recorded_at": "2026-03-11T09:00:00+00:00"
+      }
+    ],
+    "recommendations": [
+      {
+        "label": "用已完成木柜作品写一段演示提纲",
+        "basis_keys": [
+          "current_problem",
+          "representative_experience"
+        ],
+        "first_step": "用现成照片列出问题、修复过程与真实结果",
+        "confirmation_condition": "题目仍须用户选择；没有新作品需求，不重开制作"
+      },
+      {
+        "label": "从现成素材挑一个最清楚的前后对照",
+        "basis_keys": [
+          "resources",
+          "skills"
+        ],
+        "first_step": "只核对一组已授权照片与作品版本",
+        "confirmation_condition": "实际拍摄和发布仍需确认，不以计划当成完成"
+      }
+    ],
+    "coverage_gaps": [
+      "只有明确选定的虚构主档及来源，未读全账户；职业年限与预算无依据"
     ]
   }
 }

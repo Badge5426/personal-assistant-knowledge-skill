@@ -1,5 +1,9 @@
 # 个人助手知识库 Skill
 
+**RC3.2-P5 内容读取修正候选，尚未独立复审或发布。** 先读获准已有个人主档、工作台、资料与项目索引和相关定向记忆，再沿必要原话补证；有源未读、旧料待刷新与确实未知分开。按实际来源核读取入口、精确消息、遗漏与版本，从源章节反向核正文的实体、动作、时间、状态和边界。一个工程线程或三类入口成功不能代替个人内容对照。保留现有七类和13页角色。公开安装固定版本仍是下方已发布的RC3.1；旧验收是安装后补齐的历史结果，后续须在新隔离私有目标从固定远端重新运行。
+
+新用户无需已有 Space 或个人主档。有主档时优先读取；没有时，从当前会话、实际获准可读的 Codex 历史、已有记忆和相关资料发现背景、方向与项目。只处理已授权可用范围，按字段和来源状态报告覆盖；安装不自动扫描全盘或保证全账户总量。
+
 Native RC3.1 已通过本轮独立审核并发布，新增首次“你是谁＋下一步怎么做”：真实入口、有来源的介绍、一个当前优先问题。执行建议与资料补充合计最多三项，必要缺项先占名额；未知不编造，建议不成为用户事实。下方安装固定到本轮已核验的新代码提交。
 
 Native RC2 已通过独立复审并发布。默认发现历史对话、已保存个人记忆、已有个人资料/项目文档；先读可访问已有资料，去重并核对较新明确纠正，填已知内容后再问缺项。新增桌面 Work 回执适配和匿名三来源测试，无新连接器或权限。本机一条获准真实线程的 4 页返回文字范围已读完；三类混合验证使用匿名夹具，全账户全集导入尚未验收，近期列表没有游标，不能称全量。
@@ -48,14 +52,16 @@ python3 "$INSTALLER" --repo Badge5426/personal-assistant-knowledge-skill \
 
 ## 首次调用
 
+首次调用有可跳过的定位提示：“如果你已经整理过个人资料，可以告诉我项目名、文件夹、文件或页面链接，我会优先读取；没指定也会从当前可访问的历史、记忆与资料自动查找。”已指定不重复问。未指定时在已有授权范围先发现任务/项目、记忆及资料，跨项目检查背景、目标、经历和资源，再读取相关来源到当前接口可验证的边界；不只选一个工程线程，也不把返回50项当全账户。安装不新增权限，已有主档和人工目录都不是前提。
+
 ```text
 先读取项目内 .agents/skills/maintain-personal-context/SKILL.md 及引用规则，
 再按该 Skill 执行本次授权范围，在当前已连接账号建立我的私有个人助手 Space。
 整理本次授权可读的历史对话、已保存个人记忆、已有个人资料和项目文档；ChatGPT 对话只在我也授权该范围时加入。
 先报告实际入口与读取范围，不读取未授权文件、不改变分享。
-把有来源的内容保存到七类页与工作台，完成后交付实际根页和覆盖缺口，再问最多三项必要补充。
+把有来源的内容保存到七类页与工作台，完成后交付实际根页和覆盖缺口。
 直接展示“你是谁＋下一步怎么做”：有来源的称呼/简介/技能资源、一个有依据的优先问题，
-最多三项建议（依据/第一步/需确认条件）；零或少资料则说明提供什么/为什么/怎么口述或粘贴，已知不重问。
+执行建议与必要补充合计最多三项，必要缺项先占名额；建议说明依据/第一步/需确认条件，补充说明提供什么/为什么/怎么口述或粘贴，已知不重问。
 私人建库状态放在我已指定的仓库外私人目录；未知日期留未知。
 ```
 
@@ -110,13 +116,13 @@ python3 -m unittest discover -s tests -v
 python3 scripts/check_package.py
 ```
 
-本地 46 项 + Space 账本 29 项 + native 历史 31 项 + 三来源 17 项 + 首次结果 10 项 = 133 项离线测试。新增匿名 native 返回结构验证分页、host、消息身份与作者、日期、纠错保留、截断、未知及输出保留；三来源夹具验证同一事实合并出处、memory 不增加直接证据、较新明确纠正优先及已知项不重问。首次结果回归验证零/稀少/丰富资料、未知/冲突不升级、建议三要素、已知不重问及输入不被建议改写。匿名测试与真实只读提炼分开，均不证明本轮已写入真实 Space；当前结果及基线连接态证据见 [测试报告](docs/TEST_REPORT.md)。审核按 [八项验收](docs/REVIEW_GUIDE.md)。测试不要求新账户权限或依赖安装。
+当前P5候选共185项离线测试：P4的180项加5项完整性缺失回归。未报告完整性旗标不当明确false，目标证据不足保留unknown；只有逐维明确回执可确认指定窗口完整。目标自身遗漏/完整性未知、双向分页/截断、父自身与子项汇总状态、逐个正文投影及显式主条目引用分别核验。旧入口误配、目标消息遗漏、部分读取、版本变化、受阻父入口与可读子来源，以及实体/状态/顺序丢失分别回归。`source_checks.py`和`content_review.py`只检查提供的标注与读回文字，不读取账户或保证语义完整。匿名测试与真实内容对照分开，不证明新远端安装、独立模型或真实Space已完成；当前结果及历史连接态证据见[测试报告](docs/TEST_REPORT.md)，审核按[八项验收](docs/REVIEW_GUIDE.md)。测试不要求新账户权限或依赖安装。
 
 ## English
 
 Space-first personal-context skill; requires available Space tools and explicit invocation. Read the installed `.agents/skills/maintain-personal-context/SKILL.md` and its references first. Installation copies files only and grants no permissions. Explicit normal-Work loading with three complete fictional sources validated blank construction, organization, readback, incremental maintenance, controlled resume and repeat calls without new pages. Automatic discovery, a fresh independent model, UI rendering and the complete real-account history workflow remain unverified. Search hits and summaries are not all chats. Local Markdown is an explicit migration/export option. Python 3.9+, standard library only.
 
-Native RC2 passed independent review and is published. Discover authorized conversation history, existing memories and saved personal/project materials by default. Merge provenance, keep summaries graded, check newer explicit corrections, fill known content, then ask only missing or conflicting details. Optional local helpers call no API and do not write Space. The public pin above targets the verified Native RC2 code commit. One authorized local thread was read through four returned text pages; mixed-source tests use fictional fixtures, and full-account import remains unverified.
+Native RC2 passed independent review and is published. Discover authorized conversation history, existing memories and saved personal/project materials by default. Merge provenance, keep summaries graded, check newer explicit corrections, fill known content, then ask only missing or conflicting details. Optional local helpers call no API and do not write Space. The public pin above targets the verified Native RC3.1 code commit 0ac764a8118b06a859d846bc5021f71bc2de84af. One authorized local thread was read through four returned text pages; mixed-source tests use fictional fixtures, and full-account import remains unverified.
 
 ## 许可
 
