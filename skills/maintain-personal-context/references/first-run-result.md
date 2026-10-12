@@ -19,6 +19,8 @@
 
 输入 JSON 仅放仓库外私人目录：
 
+来源排除显式用 `user_excluded` 或 `experiment_excluded` 并附本次理由；格式器保留区别和覆盖缺口，不安排去读排除来源，也不把它写成“没有资料”。`not_attempted` 是尚未尝试且可继续的来源，不能冒充工具不可用。某源拒绝或被排除不扩大/替代其他来源的授权。试验结束后按新的实际范围重新检查，不把试验排除永久继承给普通使用。
+
 - `source_review`：必须列 `personal_profile`、`workbench`、`materials_index`、`related_memory` 四个本轮必要入口。每项写 `role`、实际 `status` 和获准检查 `scope`；已读 `read` 附非空 `source_ids`，其他状态附具体 `reason`。`not_found_in_checked_scope` 只指真实检查过的限定范围没有材料，不等于全账户没有。`discovered_unread`、`partial`、`stale`、`entry_missing`、`entry_unavailable`、`permission_denied`、`failed` 均保留覆盖缺口；可续读项输出核对动作，确定缺入口/不可用/拒绝不重复安排读取，两者都暂缓泛问个人资料。仅有确定受阻项时，已有依据建议仍可输出。无该标注会拒绝运行；旧输入应先补实际检查记录，不猜默认状态。此标注不证明工具调用或内容理解，仍需七类语义对照。
 
 - `claims`：沿用 native_history 的标注结构。可展示字段为 `name`、`introduction`、`skills`、`resources`；本轮问题用 `current_problem`，高价值缺项用 `representative_experience`、`time_resources`。这些字段是 Agent 针对此次已读来源的判读，不能凭源标题、助手完成报告或模板补出来。需要具体核对的摘要/冲突仍保留，不用新假设覆盖。
@@ -30,6 +32,19 @@
 - [源章节反向覆盖](content-coverage.md) 是实际正文的另外验收；可选content_review.py只检查Agent先选的源细节和提供的实际正文，不以四入口read、34字段或短语命中替代语义审核。
 - `entry`：`status` 为 `verified` / `pending` / `unavailable`。只有已真实读回的入口才填 `verified` 和 plain HTTPS `url`；其余填 `reason`。格式器只检查结构，不证明这个状态真实。
 - `recommendations`：最多三项；各有 `label`、非空且确为 known 的 `basis_keys`、`first_step`、`confirmation_condition`。缺项补充优先占用名额，剩余名额依输入顺序保留建议，总动作最多三项。资料足且没有缺项时至少给一项具体建议。
+  新建议同时声明 `scope=general/project`。general 仅用于不推进已有项目的一般建议，不附 project_context；不得为了绕过状态核对把项目任务标成 general。project 必须附下述 project_context，按该建议涉及的项目核对，其他无关的旧项目不阻塞它。旧输入省略 scope/context 仍兼容，但输出明确为 `scope=legacy,state_check=not_assessed`，正文显示“项目状态：未核（旧格式）”；执行前须补核，不能将其计为项目状态验收通过。
+
+  `project_context` 字段如下，均为 Agent 按实际原话做的语义标注；格式器不理解原话、不核实真实授权，也不执行动作：
+  - `project_key`：指向已归并为 known 的该项目当前状态 claim；claim 的 value 使用 planned/active/completed/paused/cancelled/unknown 之一。原文、实体、版本/阶段边界保留在原始来源和个人条目中；这些枚举只是本次行动状态，不把已开始升级为完成。状态冲突须先核，不能挑一条旧来源。
+  - `status`：必须与该 claim 的当前 value 相同。
+  - `source_ids`：非空，只能引用该当前值的真实来源，并至少包含用户直接原话或用户自存材料，不能只选同值 memory。保留状态日期，重新检索时间不是状态时间。
+  - `action_type`：advance/review/archive/clarify/resume/reopen 之一；`allowed_actions` 是根据现行选择、明确禁止、依赖和版本边界判读的允许动作列表，所选 action_type 必须在其中。这不是外发、安装、修改文件或扩权授权。文字建议与动作标签的语义一致性须由独立审核判断，不能把推进正文伪标为 review。
+  - planned/active 才允许 advance。completed/paused/cancelled/unknown 不允许普通推进；已完成、暂停或取消项目仅可提出已有依据的复盘、归档或核对。用户曾说“暂时不动任何部分”时，不应因为代码接受 review/archive 就安排它。unknown 先核状态。
+  - resume/reopen 仅用于 completed/paused/cancelled，并必须附 `restart_authorization={claim_key,source_id}`。该授权 claim 的当前 value 必须等于所选动作；所引用源必须是 conversation、user、direct，且带相同 `project_key`。其有时区 recorded_at 必须严格晚于该当前状态所有用户直接/自存来源的记录时间；任一必要日期未知或同时间不构成已证明的新授权，保留待核。助手建议、memory、旧授权、另一项目授权均不能重启。这里 recorded_at 只用于证明授权顺序，仍不自动成为事件/保存确认日。
+
+  例如，暂停项目状态 claim 可写 `{key:"poster_state",value:"paused",source_kind:"conversation",source_id:"fictional-u2",author_role:"user",evidence_tier:"direct",recorded_at:"2026-03-10T09:00:00+00:00"}`。建议复盘时引用 `project_context={project_key:"poster_state",status:"paused",source_ids:["fictional-u2"],action_type:"review",allowed_actions:["review"]}`。真正重新开始需另有较新直接用户消息，标注 claim 的 `value:"resume",project_key:"poster_state"` 并引用其真实 ID；不能由模型为满足格式而编造此消息。
+
+  项目标注通过输出 `state_check=annotations_checked`，同时展示状态、动作及状态/重启来源；它仅证明这些结构守卫通过，不证明自然语言提取、建议可行性或项目已恢复。明确 general 输出 not_applicable；两者都不能代替每日计划或实际执行验收。
 - `coverage_gaps`：逐项实际缺口说明。空数组不等于全量覆盖。
 
 ```sh

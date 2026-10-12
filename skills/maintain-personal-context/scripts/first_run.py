@@ -2,6 +2,7 @@
 """Offline first-run formatter for Agent-reviewed annotations; no source access or writes."""
 from __future__ import annotations
 import argparse
+from datetime import datetime, timezone
 import json
 import re
 from urllib.parse import urlsplit
@@ -32,8 +33,12 @@ SOURCE_ROLES = {
 }
 SOURCE_STATES = {"read", "not_found_in_checked_scope", "discovered_unread",
                  "partial", "stale", "entry_missing", "entry_unavailable",
-                 "permission_denied", "failed"}
-BLOCKED_SOURCE_STATES = {"entry_missing", "entry_unavailable", "permission_denied"}
+                 "permission_denied", "failed", "user_excluded",
+                 "experiment_excluded", "not_attempted"}
+BLOCKED_SOURCE_STATES = {"entry_missing", "entry_unavailable", "permission_denied",
+                         "user_excluded", "experiment_excluded"}
+PROJECT_STATES = {"planned", "active", "completed", "paused", "cancelled", "unknown"}
+PROJECT_ACTIONS = {"advance", "review", "archive", "clarify", "resume", "reopen"}
 
 
 def review_sources(data):
@@ -120,6 +125,87 @@ def nonempty(value, label):
     return value.strip()
 
 
+def check_action_scope(recommendation, known):
+    """Validate source-backed lifecycle annotations, not natural-language meaning.
+
+    Legacy advice stays usable but explicitly unassessed. A new project-scoped
+    action must name its own state; unrelated projects never gate general advice.
+    """
+    scope = recommendation.get("scope")
+    context = recommendation.get("project_context")
+    if scope is None and context is None:
+        return {"scope": "legacy", "state_check": "not_assessed"}
+    if scope == "general":
+        if context is not None:
+            raise ResultError("general advice cannot carry a project context")
+        return {"scope": "general", "state_check": "not_applicable"}
+    if scope != "project" or not isinstance(context, dict):
+        raise ResultError("project advice requires scope=project and project_context")
+    key = context.get("project_key")
+    if not isinstance(key, str) or key not in known:
+        raise ResultError("project_key must cite a known current project state")
+    fact = known[key]
+    status = context.get("status")
+    if not isinstance(status, str) or status not in PROJECT_STATES or fact["current_value"] != status:
+        raise ResultError("project status must match its source-backed canonical state claim")
+    current = next(v for v in fact["values"] if v["value"] == fact["current_value"])
+    sources = current["sources"]
+    source_ids = context.get("source_ids")
+    if not isinstance(source_ids, list) or not source_ids or any(
+            not isinstance(s, str) or s not in {r["source_id"] for r in sources} for s in source_ids):
+        raise ResultError("project context requires actual current-state source identifiers")
+    if not any(s["source_id"] in source_ids and s["author_role"] == "user"
+               and s["source_kind"] != "memory" and s["evidence_tier"] in {"direct", "saved"}
+               for s in sources):
+        raise ResultError("project state context cannot rely only on a derived source")
+    action = context.get("action_type")
+    allowed = context.get("allowed_actions")
+    if not isinstance(action, str) or action not in PROJECT_ACTIONS \
+            or not isinstance(allowed, list) or not allowed or any(
+                not isinstance(a, str) or a not in PROJECT_ACTIONS for a in allowed) or action not in allowed:
+        raise ResultError("project action must be listed in the reviewed allowed_actions")
+    if action == "advance" and status not in {"planned", "active"}:
+        raise ResultError("completed, paused, cancelled or unknown projects cannot be advanced")
+    authorization = context.get("restart_authorization")
+    if action not in {"resume", "reopen"} and authorization is not None:
+        raise ResultError("restart authorization is only valid for a resume/reopen action")
+    checked_authorization = None
+    if action in {"resume", "reopen"}:
+        if status not in {"completed", "paused", "cancelled"} or not isinstance(authorization, dict):
+            raise ResultError("restart needs a stopped project and a new direct user authorization")
+        auth_key = authorization.get("claim_key")
+        auth_source = authorization.get("source_id")
+        if not isinstance(auth_key, str) or auth_key not in known or known[auth_key]["current_value"] != action:
+            raise ResultError("restart authorization must cite the known explicit action")
+        auth_value = next(v for v in known[auth_key]["values"] if v["value"] == action)
+        direct = [s for s in auth_value["sources"] if s["source_id"] == auth_source
+                  and s["author_role"] == "user" and s["source_kind"] == "conversation"
+                  and s["evidence_tier"] == "direct" and s.get("project_key") == key]
+        if not direct:
+            raise ResultError("restart requires direct user evidence scoped to this project")
+
+        def recorded(row):
+            try:
+                stamp = datetime.fromisoformat(row["recorded_at"].replace("Z", "+00:00"))
+                return stamp.astimezone(timezone.utc) if stamp.tzinfo else None
+            except (KeyError, AttributeError, TypeError, ValueError):
+                return None
+
+        state_dates = [recorded(s) for s in sources if s["author_role"] == "user"
+                       and s["source_kind"] != "memory" and s["evidence_tier"] in {"direct", "saved"}]
+        auth_date = recorded(direct[0])
+        if auth_date is None or not state_dates or any(d is None or d >= auth_date for d in state_dates):
+            raise ResultError("restart authorization must be dated after all current state evidence")
+        checked_authorization = {"claim_key": auth_key, "source_id": auth_source,
+                                 "recorded_at": direct[0]["recorded_at"]}
+    result = {"scope": "project", "state_check": "annotations_checked", "project_context": {
+        "project_key": key, "status": status, "action_type": action,
+        "allowed_actions": list(dict.fromkeys(allowed)), "source_ids": list(dict.fromkeys(source_ids))}}
+    if checked_authorization is not None:
+        result["project_context"]["restart_authorization"] = checked_authorization
+    return result
+
+
 def build_result(data):
     """Validate structure/provenance grade, not raw-text truth or live Page permissions.
 
@@ -179,7 +265,8 @@ def build_result(data):
         actions.append({"kind": "recommendation", "label": nonempty(recommendation.get("label"), "recommendation"),
                         "basis": [evidence(k) for k in dict.fromkeys(keys)],
                         "first_step": nonempty(recommendation.get("first_step"), "first step"),
-                        "confirmation_condition": nonempty(recommendation.get("confirmation_condition"), "confirmation condition")})
+                        "confirmation_condition": nonempty(recommendation.get("confirmation_condition"), "confirmation condition"),
+                        **check_action_scope(recommendation, known)})
     grounded_actions = list(actions)
     missing = [gap for gap in GAPS if gap[0] not in known]
     # Missing high-value context has priority over extra advice. Total first-round
@@ -268,6 +355,18 @@ def render_result(result):
         basis = "；".join(cite(f) for f in action["basis"]) if isinstance(action["basis"], list) else literal(action["basis"])
         lines += ["   - 依据：" + basis, "   - 第一步：" + literal(action["first_step"]),
                   "   - 需要确认的条件：" + literal(action["confirmation_condition"])]
+        if action["kind"] == "recommendation":
+            if action["state_check"] == "not_assessed":
+                lines.append("   - 项目状态：未核（旧格式）；执行前需核适用项目、当前状态与允许动作。")
+            elif action["state_check"] == "not_applicable":
+                lines.append("   - 适用范围：一般建议；调用者标注不推进已有项目。")
+            else:
+                context = action["project_context"]
+                lines.append("   - 项目状态：" + literal(context["status"]) + "；动作：" + literal(context["action_type"])
+                             + "（来源：" + "、".join(literal(s) for s in context["source_ids"])
+                             + "；只核标注结构，原话含义仍需审核）")
+                if "restart_authorization" in context:
+                    lines.append("   - 本次重启授权来源：" + literal(context["restart_authorization"]["source_id"]))
         if action["kind"] == "information_action":
             lines += ["   - 提供什么：" + literal(action["what"]), "   - 为什么：" + literal(action["why"]),
                       "   - 怎么提供：" + literal(action["how"])]
