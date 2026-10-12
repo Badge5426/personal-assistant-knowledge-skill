@@ -45,12 +45,20 @@
 
 源章节包含的独立相关链接要读取或明确未读，不能用已读父索引冒充。记录所用源版本，写前/审核时重读动态源；只比较并刷新变化章节，不锁死旧版本，不把整页更新日当所有事实重新确认。主条目与工作台/覆盖记录的投影同时核对。
 
+## 提炼收尾核验
+
+生成资料正文前，保存由原文逐段得到的事实/状态/边界清单和来源记录ID，再生成展示页；不能从生成结果反推清单。独立项目的助手交付报告可标为助手报告，用户验收仍未知；不因尚未验收而删去交付。撤回、停止推荐、暂停和被新版本替代各有不同含义，保存适用对象及时间，不能只留最新版本把旧版禁用边界丢掉。
+
+冻结前做两次反查：最终retained记录→源段清单→可读条目，以及分析中识别的每个事实/边界→最终正文或具体不提炼理由。仅为消歧保留的上下文可不生成新事实，但须记录对应关系与具体理由；`retained`、空atom列表或“已在原文保留”都不能独自证明提炼完成。同一消息可映射多个事实；合理合并需仍能定位每个独立项目和状态。
+
+每段引文单独核语义，不以主概述正确抵消引文错误。摘录须保留原话的否定、条件、转述主体、时态和不确定性范围。展示完整原段是保守做法；过长时可以有来源地转述，不把缩短后的肯定短语当原话。下方脚本的保守机械检查要求实际引文text等于context，context由同源一个或多个连续完整段落组成，并逐字出现在实际读回正文；完整句但非整段的摘录可能被此检查拒绝，这不代表语义错误，可改用有来源的转述并单独核义，不能为过检查复制不必要的敏感上下文。跨段指代和作者归属仍需独立人工/模型审核。无法核清则标待核，不给内容通过结论。
+
 ## 可选纯离线辅助
 
 `scripts/content_review.py`只检查Agent标注与提供的实际读回正文，不读账户、自动抽取语义或写Page。输入放公开仓库外私人目录，输出stdout：
 
 ```sh
-python3 -B skills/maintain-personal-context/scripts/content_review.py --input "$PRIVATE_COVERAGE_INPUT"
+python3 -B skills/maintain-personal-context/scripts/content_review.py --input "$PRIVATE_COVERAGE_INPUT" --require-finalization
 ```
 
 `sections`各项有唯一`id`、真实`source_id`、实际`scope/status`（read/partial/discovered_unread/inaccessible/stale），非read附`reason`。有观察版本时成对填`read_version/latest_version`；变化则待刷新。已读不导入附`excluded_reason`，否则列`atoms`：唯一`id`、七类现有`role`（identity/experience/resources/goals/projects/results/sources）、来源先确定的关键短语`required_terms`。不从生成结果倒推降低标准。
@@ -60,6 +68,14 @@ python3 -B skills/maintain-personal-context/scripts/content_review.py --input "$
 稳定档案等只有主条目引用的投影可显式填`kind=reference`，不要求复制所有事实。其`references`按atom_id列`target_ref`及实际Markdown链接`literal`；literal必须链接到该target_ref且出现在读回正文中，target_ref使用对应主条目body的实际page_ref。被引用主条目须针对同atom已读回、角色/出处匹配且保留必要短语；引用链不能代替主条目正文，不存在/错误目标或未读回引用仍报缺口。仅引用时投影自己的role可为链接所在类别、source_ids可空，事实出处由实际主条目核验；它不成为另一份可写事实。短语检查可辅助发现实体和状态丢失；同义改写由独立审核核义后调整标注，不能让字面命中代替判断。
 
 `annotations_matched`仅表示所列标注匹配；`coverage_limits/read_scope_complete`另报，均不是内容PASS。遗漏未列章节、语义正确性、排除理由、真实权限、用户认可和账户全量仍需独立判断。
+
+首次建库或内容复验的收尾输入还包括：
+
+- `source_records`：最终记录集合的逐条身份、真实`source_id`、返回原文`text`和互斥`disposition`（retained/excluded/quarantined/unread）。`id`须在本清单唯一；不同来源同名消息不能合并。实际记录和这里的适配清单须逐条核对，不能只挑已成功提炼的记录。
+- 每个`section.record_ids`：该源段对应的记录ID，来源身份必须匹配。保留记录无任何源段映射，或关联源段仍为partial、未读、不可访问或stale时会报缺口；已读源段没有atom或具体排除理由仍报缺口。这里的read仅针对声明的源段范围，不把整个账户或历史来源标为完整。未读、隔离和明确排除不被强迫生成个人事实。具体理由和源清单完整性仍由独立审核判断。
+- `quotations`：逐个展示引文的`id/record_id/text/context/page_ref`。`text`是该次实际展示的完整引文，须等于`context`。`context`须为同一原消息的一个或多个连续完整非空段落（按空行分段），保持原始顺序及连续文本，并出现在指定目标的真实读回正文。不能用同页另一处完整段落为缩短后的引文通过检查。没有引文也显式传空列表。引文不是从别处拼回的句子；摘录只命中字面子串不够。
+
+`--require-finalization`在已知缺口、缺少记录清单或未声明引文清单时返回非零。旧调用不带该参数仍可只核章节，但返回的`record_inventory_checked=false`不能冒充完成收尾。脚本不证明段落外的语境正确、不保证调用者提交了所有源/引文，也不读取账户或修改任何资料；独立内容审核始终另报。
 
 ## 固定远端重新运行
 
